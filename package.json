@@ -1,0 +1,23 @@
+{
+  "name": "cloud-reader",
+  "version": "1.0.0",
+  "description": "Read & sync your pdf everywhere",
+  "dependencies": {
+    "pdfjs-dist": "^1.5.262",
+    "webpack": "^1.13.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yinthewind/CloudReader.git"
+  },
+  "author": "Yinthewind",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yinthewind/CloudReader/issues"
+  },
+  "homepage": "https://github.com/yinthewind/CloudReader#readme"
+}
