@@ -1,10 +1,10 @@
 'use strict'
 
-var url = 'helloworld.pdf';
-
 var PDFJS = require('pdfjs-dist');
 
-global.PDFJS.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.js';
+var url = 'helloworld.pdf';
+
+//global.PDFJS.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.js';
 
 PDFJS.getDocument(url).then(function(pdf) {
 	pdf.getPage(1).then(function(page) {
