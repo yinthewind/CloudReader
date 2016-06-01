@@ -1,0 +1,13 @@
+.pop-win {
+	width: 500px;
+}	
+
+.list-item {
+	background-color: #eee;
+	cursor: pointer;
+}
+
+.list-item:hover {
+	background-color: #00a1e7;
+}
+	
