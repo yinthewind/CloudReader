@@ -1,8 +1,9 @@
-var React = require('React');
+var React = require('react');
 
 module.exports = React.createClass({
 	render: function() {
 		text = this.props.text;
-		return <div> {text}  </div>
+		clickHandler = this.props.clickHandler;
+		return <div onClick={clickHandler}> {text} </div>
 	}
 });
