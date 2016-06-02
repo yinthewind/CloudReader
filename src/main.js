@@ -1,18 +1,53 @@
-chrome.extension.onConnect.addListener(function(port) {
-	port.onMessage.addListener(function(msg) {
-		
+var baseUrl = "https://www.googleapis.com/drive/v3";
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+
+		var that = this;
+		request.callback = function(error, status, response) {
+			if(status !== 200) {
+				sendResponse({ files: [{name:"failed", id: "..."}] });
+			} else {
+				sendResponse(response);
+			}
+		}
+
+		processor(request);
+
+		return true; // indicate async sendResponse
+	}
+);
+
+function processor(request) {
+	switch(request.type) {
+		case 'listPdf':
+			listPdf(request);
+			break;
+		case 'getPdf':
+			getPdf(request);
+			break;
+		default:
+	}
+}
+
+function getPdf(request) {
 	xhrWithAuth(
 		'GET',
-		"https://www.googleapis.com/drive/v3/files?q=mimeType%3D'application/pdf'",
+		baseUrl + "/files/fileId/" + request.fileId 
+		+ "?fields=webContentLink%2CwebViewLink",
 		true,
-		function(error, status, response) {
-			
-			if(status != 200) port.postMessage(status);
-			else port.postMessage(response);
-		});
-		
-	});
-});
+		request.callback
+	);
+}
+
+function listPdf(request) {
+	xhrWithAuth(
+		'GET',
+		baseUrl + "/files?q=mimeType%3D'application/pdf'",
+		true,
+		request.callback
+	);
+}
 
 function xhrWithAuth(method, url, interactive, callback) {
 	var accessToken;
