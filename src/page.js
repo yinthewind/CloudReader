@@ -2,16 +2,14 @@
 
 var PDFJS = require('pdfjs-dist');
 
-var url = 'helloworld.pdf';
+function renderPdf(url, container) {
 
-//global.PDFJS.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.js';
-
-PDFJS.getDocument(url).then(function(pdf) {
-	pdf.getPage(1).then(function(page) {
+	function renderPage(page) {
 		var scale = 1.5;
 		var viewport = page.getViewport(scale);
 
-		var canvas = document.getElementById('container');
+		var canvas = document.createElement('canvas');
+		canvas.style.display = "block";
 		var context = canvas.getContext('2d');
 		canvas.height = viewport.height;
 		canvas.width = viewport.width;
@@ -20,6 +18,27 @@ PDFJS.getDocument(url).then(function(pdf) {
 			canvasContext: context,
 			viewport: viewport
 		};
+
+		container.appendChild(canvas);
 		page.render(renderContext);
-	});
-});
+	}
+
+	function renderPages(pdfDoc) {
+		for(var num = 1; num <= pdfDoc.numPages; num++) {
+			pdfDoc.getPage(num).then(renderPage);
+			console.log(num);
+		}
+	}
+
+	PDFJS.disableWorker = true;
+	PDFJS.getDocument(url).then(renderPages);
+}
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		console.log(request.type);
+		if(request.type == 'openPdf') {
+			renderPdf(request.bookUrl, document.getElementById('container'));
+		}
+	}
+);

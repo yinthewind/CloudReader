@@ -3,15 +3,7 @@ var baseUrl = "https://www.googleapis.com/drive/v3";
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 
-		var that = this;
-		request.callback = function(error, status, response) {
-			if(status !== 200) {
-				sendResponse({ files: [{name:"failed", id: "..."}] });
-			} else {
-				sendResponse(response);
-			}
-		}
-
+		request.sendResponse = sendResponse;
 		processor(request);
 
 		return true; // indicate async sendResponse
@@ -23,20 +15,33 @@ function processor(request) {
 		case 'listPdf':
 			listPdf(request);
 			break;
-		case 'getPdf':
-			getPdf(request);
+		case 'openPdf':
+			openPdf(request);
 			break;
 		default:
 	}
 }
 
-function getPdf(request) {
+function openPdf(request) {
+	
+	chrome.tabs.create({url: 'page.html'}, function(tab) {
+		var fileId = request.id;
+
+		getPdf(request, function(error, status, response) {
+			var data = JSON.parse(response);
+
+			chrome.tabs.sendMessage(tab.id, 
+				{ type: 'openPdf', bookUrl: data.webContentLink });
+		});
+	});
+}
+
+function getPdf(request, callback) {
 	xhrWithAuth(
 		'GET',
-		baseUrl + "/files/fileId/" + request.fileId 
-		+ "?fields=webContentLink%2CwebViewLink",
+		baseUrl + "/files/" + request.id + "?fields=webContentLink",
 		true,
-		request.callback
+		callback
 	);
 }
 
@@ -45,7 +50,9 @@ function listPdf(request) {
 		'GET',
 		baseUrl + "/files?q=mimeType%3D'application/pdf'",
 		true,
-		request.callback
+		function(error, status, response) {
+			if(status === 200) request.sendResponse(response);
+		}
 	);
 }
 

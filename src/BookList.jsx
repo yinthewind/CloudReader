@@ -10,7 +10,7 @@ module.exports = React.createClass({
 						<ListItem 
 							key={book.id}
 							text={book.name} 
-							clickHandler={function(){ console.log(book.id) }} />
+							clickHandler={book.handler} />
 					)
 				}
 			</div>

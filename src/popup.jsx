@@ -8,13 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		var data = JSON.parse(response);
 
+		data.files.forEach(file => {
+			file.handler = function() {
+				chrome.runtime.sendMessage({type: "openPdf", id: file.id});
+			}
+		});
+
 		ReactDOM.render(
 			<PopWin files={data.files}/>,
 			document.getElementById('container')
 		);
 	});
-
-	document.getElementById('btn2').onclick = function() {
-		chrome.tabs.create({ url: 'page.html' });
-	}
 });
