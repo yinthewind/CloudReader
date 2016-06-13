@@ -1,7 +1,7 @@
 module.exports = [
 	{
 		entry: {
-			page: './src/page.js',
+			page: './src/page.jsx',
 			popup: './src/popup.jsx'
 		},
 		module: {
