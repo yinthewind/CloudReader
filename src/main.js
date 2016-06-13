@@ -25,7 +25,6 @@ function processor(request) {
 function openPdf(request) {
 	
 	chrome.tabs.create({url: 'page.html'}, function(tab) {
-		var fileId = request.id;
 
 		getPdf(request, function(error, status, response) {
 			var data = JSON.parse(response);

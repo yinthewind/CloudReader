@@ -20,7 +20,8 @@ module.exports = [
 	},
 	{
 		entry: {
-			testPopup: './dev/testPopup.jsx'
+			testPopup: './dev/testPopup.jsx',
+			testPage: './dev/testPage.jsx'
 		},
 		module: {
 			loaders: [ 
