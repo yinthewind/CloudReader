@@ -18,7 +18,7 @@ module.exports = [
 			extensions: ['', '.js', '.jsx']
 		}
 	},
-	{
+{
 		entry: {
 			testPopup: './dev/testPopup.jsx',
 			testPage: './dev/testPage.jsx'
