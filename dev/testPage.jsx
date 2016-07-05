@@ -6,6 +6,8 @@ ReactDOM.render(
 	<PdfViewer 
 		url={ "example.pdf" } 
 		initialPageIndex={2} 
-		syncHandler={function() {console.log(this)}}/>,
+		syncHandler={test}/>,
 	document.getElementById('container')
 );
+
+function test() { console.log('#' + this) }

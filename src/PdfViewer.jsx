@@ -5,19 +5,28 @@ var React = require('react');
 
 module.exports = React.createClass({
 
+	fileId: null,
+	commentId: null,
+	pageIndex: 0,
 	pageOffsets: [],
 
 	componentDidMount: function() {
 		if(this.props.syncHandler) {
 			var that = this;
 			var handler = function() {
-				that.props.syncHandler();
-				that.scrollToPage(that.pageIndex);
-				console.log(that.pageIndex);
+				if(that.props.syncHandler) {
+					that.props.syncHandler(
+						that.fileId, 
+						that.commentId, 
+						that.pageIndex, 
+						that.scrollToPage
+					);
+				}
 			}
 
-			window.setInterval(handler, 1000);
+			setInterval(handler, 5000);
 		}
+		that.scrollToPage(that.pageIndex);
 	},
 
 	getInitialState: function() {
@@ -26,7 +35,8 @@ module.exports = React.createClass({
 
 		PDFJS.disableWorker = true;   
 		var url = this.props.url;
-		this.pageIndex = this.props.initialPageIndex | 0;
+		this.fileId = this.props.fileId;
+		this.pageIndex = this.props.initialPageIndex || 0;
 		var doc = PDFJS.getDocument(url);
 
 		return { 
@@ -43,8 +53,6 @@ module.exports = React.createClass({
 
 	scrollToPage: function(pageIndex) {
 		var pos = this.pageOffsets[pageIndex];
-		console.log(this.pageOffsets);
-		console.log(pos);
 		if(pos) {
 			window.scrollTo(0, pos);
 		}

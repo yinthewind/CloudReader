@@ -13,10 +13,16 @@ chrome.runtime.onMessage.addListener(
 function processor(request) {
 	switch(request.type) {
 		case 'listPdf':
-			listPdf(request);
+			listFile(request);
 			break;
 		case 'openPdf':
 			openPdf(request);
+			break;
+		case 'uploadProgress':
+			uploadProgress(request);
+			break;
+		case 'getProgress':
+			getProgress(request);
 			break;
 		default:
 	}
@@ -26,36 +32,94 @@ function openPdf(request) {
 	
 	chrome.tabs.create({url: 'page.html'}, function(tab) {
 
-		getPdf(request, function(error, status, response) {
+		getFileUrl(request, function(error, status, response) {
 			var data = JSON.parse(response);
 
 			chrome.tabs.sendMessage(tab.id, 
-				{ type: 'openPdf', bookUrl: data.webContentLink });
+				{ type: 'openPdf', fileId: data.id, bookUrl: data.webContentLink });
 		});
 	});
 }
 
-function getPdf(request, callback) {
+function getFileUrl(request, callback) {
+	var fileId = request.fileId;
+
 	xhrWithAuth(
 		'GET',
-		baseUrl + "/files/" + request.id + "?fields=webContentLink",
+		baseUrl + "/files/" + fileId + "?fields=webContentLink%2Cid",
+		null,
 		true,
 		callback
 	);
 }
 
-function listPdf(request) {
+function listFile(request) {
+	var fileType = request.mimeType || "'application/pdf'";
+
 	xhrWithAuth(
 		'GET',
-		baseUrl + "/files?q=mimeType%3D'application/pdf'",
+		baseUrl + "/files?q=mimeType%3D" + fileType,
+		null,
 		true,
 		function(error, status, response) {
-			if(status === 200) request.sendResponse(response);
+			request.sendResponse(response);
 		}
 	);
 }
 
-function xhrWithAuth(method, url, interactive, callback) {
+function getProgress(request) {
+
+	var fileId = request.fileId;
+
+	xhrWithAuth(
+		'GET',
+		baseUrl + '/files/' + fileId + '/comments?fields=comments',
+		null,
+		true,
+		function(error, status, response) {
+			if(response == null || status == 404) {
+				request.sendResponse({});
+				return;
+			}
+
+			var data = JSON.parse(response);
+
+			data.comments.forEach(function(value) {
+				if(value.content.startsWith('CloudReaderProgress')) {
+					request.sendResponse(value);
+					return ;
+				}
+			});
+		}
+	);
+}
+
+function uploadProgress(request) {
+
+	var fileId = request.fileId;
+	var commentId = request.commentId;
+	var data = request.data;
+
+	if(commentId) {
+		xhrWithAuth(
+			'PATCH',
+			baseUrl + '/files/' + fileId + '/comments/' + commentId + '?fields=content',
+			data,
+			true,
+			function() {}
+		);
+	} else {
+		xhrWithAuth(
+			'POST',
+			baseUrl + '/files/' + fileId + '/comments?fields=content',
+			data,
+			true,
+			function() {}
+		);
+	}
+}
+
+function xhrWithAuth(method, url, data, interactive, callback) {
 	var accessToken;
 	var retry = true;
 
@@ -80,7 +144,11 @@ function xhrWithAuth(method, url, interactive, callback) {
 		xhr.open(method, url);
 		xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
 		xhr.onload = requestComplete;
-		xhr.send();
+		if(data) {
+			xhr.setRequestHeader('Content-Type', 'application/json');
+		}
+
+		xhr.send(JSON.stringify(data));
 	}
 
 	function requestComplete() {

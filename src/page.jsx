@@ -10,10 +10,36 @@ chrome.runtime.onMessage.addListener(
 		if(request.type == 'openPdf') {
 			
 			ReactDOM.render(
-				<PdfViewer url={request.bookUrl} />,
+				<PdfViewer 
+					url={request.bookUrl} 
+					fileId={request.fileId}
+					syncHandler={syncProgress}/>,
 				document.getElementById('container')
 			);
 		}
 	}
 );
 
+function syncProgress(fileId, commentId, currentIndex, getProgressCallback) {
+		
+	var commendId = null;
+	chrome.runtime.sendMessage({ type: 'getProgress', fileId: fileId }, function(response) {
+		if(response != null) {
+			var cloudIndex = response.content.split(':').pop();
+			commentId = response.id;
+			if(cloudIndex > currentIndex) {
+				getProgressCallback(cloudIndex);
+			}
+			console.log('cloudIndex: ' + cloudIndex + '###currentIndex' + currentIndex);
+		}
+		var request = {
+			type: 'uploadProgress',
+			fileId: fileId,
+			commentId: commentId,
+			data: { content: 'CloudReaderProgress:' +  currentIndex }
+		};
+			
+		chrome.runtime.sendMessage(request);
+		console.log('uploading');
+	});
+}
