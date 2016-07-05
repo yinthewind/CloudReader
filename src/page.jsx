@@ -23,23 +23,27 @@ chrome.runtime.onMessage.addListener(
 function syncProgress(fileId, commentId, currentIndex, getProgressCallback) {
 		
 	var commendId = null;
+	var cloudIndex = null;
 	chrome.runtime.sendMessage({ type: 'getProgress', fileId: fileId }, function(response) {
 		if(response != null) {
-			var cloudIndex = response.content.split(':').pop();
+			cloudIndex = response.content.split(':').pop();
 			commentId = response.id;
 			if(cloudIndex > currentIndex) {
 				getProgressCallback(cloudIndex);
 			}
 			console.log('cloudIndex: ' + cloudIndex + '###currentIndex' + currentIndex);
 		}
-		var request = {
-			type: 'uploadProgress',
-			fileId: fileId,
-			commentId: commentId,
-			data: { content: 'CloudReaderProgress:' +  currentIndex }
-		};
+
+		if(cloudIndex == null || cloudIndex < currentIndex) {
+			var request = {
+				type: 'uploadProgress',
+				fileId: fileId,
+				commentId: commentId,
+				data: { content: 'CloudReaderProgress:' +  currentIndex }
+			};
 			
-		chrome.runtime.sendMessage(request);
-		console.log('uploading');
+			chrome.runtime.sendMessage(request);
+			console.log('uploading');
+		}
 	});
 }

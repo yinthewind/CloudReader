@@ -26,7 +26,7 @@ module.exports = React.createClass({
 
 			setInterval(handler, 5000);
 		}
-		that.scrollToPage(that.pageIndex);
+		//that.scrollToPage(that.pageIndex);
 	},
 
 	getInitialState: function() {
