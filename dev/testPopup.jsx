@@ -1,9 +1,9 @@
-var PopWin = require('./../src/PopWin');
+var Popup = require('./../src/Popup');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
 ReactDOM.render(
-	<PopWin files={[ 
+	<Popup files={[ 
 		{name: "AAA", id: "111"},
 		{name: "BBB", id: "222"},
 		{name: "CCC", id: "333"}

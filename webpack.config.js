@@ -1,8 +1,8 @@
 module.exports = [
 	{
 		entry: {
-			page: './src/page.jsx',
-			popup: './src/popup.jsx'
+			pageLoader: './src/pageLoader.jsx',
+			popupLoader: './src/popupLoader.jsx'
 		},
 		module: {
 			loaders: [ 

@@ -1,22 +1,14 @@
-var ReactDOM = require('react-dom');
+require('./Popup.css');
 var React = require('react');
-var PopWin = require('./PopWin');
+var BookList = require('./BookList');
 
-document.addEventListener('DOMContentLoaded', function() {
 
-	chrome.runtime.sendMessage({type: "listPdf"}, function(response) {
-
-		var data = JSON.parse(response);
-
-		data.files.forEach(file => {
-			file.handler = function() {
-				chrome.runtime.sendMessage({type: "openPdf", fileId: file.id});
-			}
-		});
-
-		ReactDOM.render(
-			<PopWin files={data.files}/>,
-			document.getElementById('container')
-		);
-	});
+module.exports = React.createClass({
+	render: function() {
+		return (
+			<div className='popup'>
+				<BookList books={this.props.files}/>
+			</div>
+		)
+	}
 });

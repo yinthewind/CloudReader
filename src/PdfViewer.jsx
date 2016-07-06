@@ -23,10 +23,8 @@ module.exports = React.createClass({
 					);
 				}
 			}
-
-			setInterval(handler, 5000);
+			setInterval(handler, 20000);
 		}
-		//that.scrollToPage(that.pageIndex);
 	},
 
 	getInitialState: function() {
@@ -89,7 +87,6 @@ module.exports = React.createClass({
 			page.render(renderContext);
 
 			that.pageOffsets.push($(canvas).offset().top);
-			console.log(that.pageOffsets);
 		}
 
 		function renderPages(pdfDoc) {

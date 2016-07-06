@@ -25,7 +25,7 @@
 	  "https://docs.google.com/*", 
 	  "https://*.googleusercontent.com/*"
 	],
-	"js": ["page.bundle.js"]
+	"js": ["pageLoader.bundle.js"]
   }],
   "oauth2": {
 	"client_id": "331335626158-239hv2a6uincrkrnki0eajgbngbt7bkp.apps.googleusercontent.com",
