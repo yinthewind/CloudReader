@@ -67,7 +67,7 @@ module.exports = React.createClass({
 		var that = this;
 
 		function renderPage(page) {
-			var scale = 1.5;
+			var scale = 2;
 			var viewport = page.getViewport(scale);
 
 			var canvas = document.createElement('canvas');
@@ -89,14 +89,18 @@ module.exports = React.createClass({
 			that.pageOffsets.push($(canvas).offset().top);
 		}
 
-		function renderPages(pdfDoc) {
-			for(var num = 1; num <= pdfDoc.numPages; num++) {
-				pdfDoc.getPage(num).then(renderPage);
-			} 
+		function renderPages(pdfDoc, idx) {
+			if(idx <= pdfDoc.numPages) {
+				pdfDoc.getPage(idx).then(renderPage).then(function() {
+					renderPages(pdfDoc, idx + 1);
+				});
+			}
 		}
 
 		var pdfContainer = <div id="pdfContainer" />;
-		doc.then(renderPages);
+		doc.then(function(pdfDoc) {
+			renderPages(pdfDoc, 1);
+		});
 
 		return pdfContainer;
 	}

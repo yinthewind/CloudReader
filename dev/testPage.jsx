@@ -4,7 +4,7 @@ var PdfViewer = require('./../src/PdfViewer');
 
 ReactDOM.render(
 	<PdfViewer 
-		url={ "example.pdf" } 
+		url={ "driver-full.pdf" } 
 		initialPageIndex={2} 
 		syncHandler={test}/>,
 	document.getElementById('container')
