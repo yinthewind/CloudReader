@@ -7,7 +7,7 @@ module.exports = React.createClass({
 		return (
 		<div>{
 			this.props.items && this.props.items.map(function(item) { 
-				return <MenuItem text={item}></MenuItem>
+				return <MenuItem data={item}></MenuItem>
 			})
 		}</div>)
 	}

@@ -49,8 +49,19 @@ module.exports = React.createClass({
 		});
 
 		return { 
-			pages: [] 
+			pages: [],
+			scale: 1.5
 		}
+	},
+
+	increaseScale: function() {
+		var newScale = this.state.scale + 0.25;
+		this.setState(Object.assign({}, this.state, {scale: newScale}));
+	},
+
+	decreaseScale: function() {
+		var newScale = this.state.scale - 0.25;
+		this.setState(Object.assign({}, this.state, {scale: newScale}));
 	},
 
 	render: function() {
@@ -58,13 +69,24 @@ module.exports = React.createClass({
 		if(this.props.url == null) return null;
 
 		var pageOffsets = this.pageOffsets;
+		var that = this;
 
 		return (<div> 
-					<MenuBar items={['+', '-']}/>
+					<MenuBar items={[
+						{ 
+							text: '+', 
+							onClick: this.increaseScale
+						}, 
+						{ 
+							text: '-', 
+							onClick: this.decreaseScale
+						}
+					]}/>
 					{ 
 						this.state.pages.map(function(page, idx) {
 							return <Page 
 										src={page} 
+										scale={that.state.scale}
 										onFinish={function(top) {
 											pageOffsets[idx]=top;
 										}}

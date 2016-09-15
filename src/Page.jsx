@@ -13,7 +13,8 @@ module.exports = React.createClass({
 	},
 
 	renderPage: function(page, canvas, onFinish) {
-		var scale = 2;
+		if(!canvas) return null;
+		var scale = this.props.scale || 1.5;
 		var viewport = page.getViewport(scale);
 
 		canvas.style.display = 'block';
