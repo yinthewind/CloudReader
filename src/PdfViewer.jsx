@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var PDFJS = require('pdfjs-dist');
 var React = require('react');
-
+var MenuBar = require('./MenuBar');
 
 module.exports = React.createClass({
 
@@ -46,7 +46,10 @@ module.exports = React.createClass({
 
 		if(this.props.url == null) return null;
 
-		return <div> { this.renderPdf(this.state.doc) }</div>
+		return (<div> 
+					<MenuBar items={['+', '-']}/>
+					{ this.renderPdf(this.state.doc) }
+				</div>)
 	},
 
 	scrollToPage: function(pageIndex) {
