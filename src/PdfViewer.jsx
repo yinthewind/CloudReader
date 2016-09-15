@@ -2,6 +2,7 @@ var $ = require('jquery');
 var PDFJS = require('pdfjs-dist');
 var React = require('react');
 var MenuBar = require('./MenuBar');
+var Page = require('./Page');
 
 module.exports = React.createClass({
 
@@ -37,8 +38,18 @@ module.exports = React.createClass({
 		this.pageIndex = this.props.initialPageIndex || 0;
 		var doc = PDFJS.getDocument(url);
 
+		var that = this;
+		doc.then(function(pdfDoc) {
+			var pages = [];
+			for(var i = 1; i < pdfDoc.numPages; i++) {
+				pages.push(pdfDoc.getPage(i));
+			}
+			console.log(pages);
+			that.setState({pages: pages});
+		});
+
 		return { 
-			doc: doc
+			pages: [] 
 		}
 	},
 
@@ -46,9 +57,20 @@ module.exports = React.createClass({
 
 		if(this.props.url == null) return null;
 
+		var pageOffsets = this.pageOffsets;
+
 		return (<div> 
 					<MenuBar items={['+', '-']}/>
-					{ this.renderPdf(this.state.doc) }
+					{ 
+						this.state.pages.map(function(page, idx) {
+							return <Page 
+										src={page} 
+										onFinish={function(top) {
+											pageOffsets[idx]=top;
+										}}
+									/>
+						})
+					}
 				</div>)
 	},
 
@@ -63,48 +85,5 @@ module.exports = React.createClass({
 		var scrollTop = $(window).scrollTop();
 		if(this.pageOffsets[this.pageIndex] < scrollTop) this.pageIndex++;
 		console.log(this.pageIndex);
-	},
-
-	renderPdf: function(doc) {
-
-		var that = this;
-
-		function renderPage(page) {
-			var scale = 2;
-			var viewport = page.getViewport(scale);
-
-			var canvas = document.createElement('canvas');
-			canvas.style.display = 'block';
-			canvas.style.margin = 'auto';
-			var context = canvas.getContext('2d');
-			canvas.height = viewport.height;
-			canvas.width = viewport.width;
-
-			var renderContext = {
-				canvasContext: context,
-				viewport: viewport
-			};
-
-			var container = document.getElementById('pdfContainer');
-			container.appendChild(canvas);
-			page.render(renderContext);
-
-			that.pageOffsets.push($(canvas).offset().top);
-		}
-
-		function renderPages(pdfDoc, idx) {
-			if(idx <= pdfDoc.numPages) {
-				pdfDoc.getPage(idx).then(renderPage).then(function() {
-					renderPages(pdfDoc, idx + 1);
-				});
-			}
-		}
-
-		var pdfContainer = <div id="pdfContainer" />;
-		doc.then(function(pdfDoc) {
-			renderPages(pdfDoc, 1);
-		});
-
-		return pdfContainer;
 	}
 });
