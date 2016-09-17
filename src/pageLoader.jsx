@@ -21,25 +21,3 @@ chrome.runtime.onMessage.addListener(
 	}
 );
 
-function getProgress(fileId, currentIndex) {
-	chrome.runtime.sendMessage(
-		{ type: 'getProgress', fileId: fileId },
-		function(response) {
-			if(response == null) return;
-			cloudIndex = response.content.split(':').pop();
-			commentId = response.id;
-			console.log('get progress: ' + cloudIndex); 
-		}
-	);
-}
-
-function uploadProgress(fileId, commentId, currentIndex) {
-	var request = {
-		type: 'uploadProgress',
-		fileId: fileId,
-		commentId: commentId,
-		data: { content: 'CloudReaderProgress:' + currentIndex }
-	};
-	chrome.runtime.sendMessage(request);
-	console.log('uploading');
-}
