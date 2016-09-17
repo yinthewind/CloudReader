@@ -13,7 +13,6 @@ chrome.runtime.onMessage.addListener(
 				<PdfViewer 
 					url={request.bookUrl}
 					fileId={request.fileId}
-					sendMessage={chrome.runtime.sendMessage}
 				/>,
 				document.getElementById('container')
 			);

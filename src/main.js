@@ -18,11 +18,11 @@ function processor(request) {
 		case 'openPdf':
 			openPdf(request);
 			break;
-		case 'uploadProgress':
-			uploadProgress(request);
+		case 'uploadMetadata':
+			uploadMetadata(request);
 			break;
-		case 'getProgress':
-			getProgress(request);
+		case 'getMetadata':
+			getMetadata(request);
 			break;
 		default:
 	}
@@ -67,7 +67,7 @@ function listFile(request) {
 	);
 }
 
-function getProgress(request) {
+function getMetadata(request) {
 
 	var fileId = request.fileId;
 
@@ -83,10 +83,15 @@ function getProgress(request) {
 			}
 
 			var data = JSON.parse(response);
-
 			data.comments.forEach(function(value) {
-				if(value.content.startsWith('CloudReaderProgress')) {
-					request.sendResponse(value);
+				if(value.content.startsWith('CloudReaderMetaData')) {
+					var index = value.content.indexOf('{');
+					var metaData = null;
+					if(index != -1) {
+						metaData = value.content.substring(index);
+					}
+					var result = Object.assign({id: value.id}, JSON.parse(metaData));
+					request.sendResponse(result);
 					return ;
 				}
 			});
@@ -94,11 +99,11 @@ function getProgress(request) {
 	);
 }
 
-function uploadProgress(request) {
+function uploadMetadata(request) {
 
 	var fileId = request.fileId;
 	var commentId = request.commentId;
-	var data = request.data;
+	var data = { content: 'CloudReaderMetaData:' + JSON.stringify(request.data) };
 
 	if(commentId) {
 		xhrWithAuth(

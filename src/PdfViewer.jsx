@@ -10,17 +10,16 @@ module.exports = React.createClass({
 	commentId: null,
 	pageIndex: 0,
 	pageOffsets: [],
-	sendMessage: null,
+	synced: false,
 
 	componentDidMount: function() {
-		if(this.props.sendMessage) {
-			this.sendMessage = this.props.sendMessage;
-			var that = this;
-			var handler = function() {
-				that.syncProgress(that.fileId, that.commentId, that.pageIndex);
-			}
-			setInterval(handler, 20000);
+		this.getMetadata();
+
+		var that = this;
+		var handler = function() {
+			if(that.synced) that.uploadMetadata();
 		}
+		setInterval(handler, 10000);
 	},
 
 	getInitialState: function() {
@@ -104,58 +103,38 @@ module.exports = React.createClass({
 		console.log(this.pageIndex);
 	},
 
-
-	syncProgress: function(fileId, commentId, currentIndex) {
-		
+	getMetadata: function() {
 		var that = this;
-		var commendId = null;
-		var cloudIndex = null;
-		this.sendMessage(
-			{ type: 'getProgress', fileId: fileId }, 
-			function(response) {
-				if(response != null) {
-					cloudIndex ==response.content.split(':').pop();
-					commentId = response.id;
-					if(cloudIndex > currentIndex) {
-						that.scrollToPage(cloudIndex);
-					}
-				console.log('cloud: ' + cloudIndex + '#current: ' + currentIndex);
-			}
-
-			if(cloudIndex == null || cloudIndex < currentIndex) {
-				var request = {
-					type: 'uploadProgress',
-					fileId: fileId,
-					commentId: commentId,
-					data: { content: 'CloudReaderProgress:' +  currentIndex }
-				};
-			
-				that.sendMessage(request);
-				console.log('uploading');
-			}
-		});
-	},
-
-	getProgress: function(fileId, currentIndex) {
 		chrome.runtime.sendMessage(
-			{ type: 'getProgress', fileId: fileId },
+			{ type: 'getMetadata', fileId: this.fileId },
 			function(response) {
 				if(response == null) return;
-				cloudIndex = response.content.split(':').pop();
-				commentId = response.id;
-				console.log('get progress: ' + cloudIndex); 
+				if(that.pageIndex < response.pageIndex) {
+					that.pageIndex = response.pageIndex;
+					that.scrollToPage(that.pageIndex);
+				}
+				that.commentId = response.id;
+				console.log('get metadata...'); 
+				console.log(response);
+				that.synced = true;
 			}
 		);
 	},
 
-	uploadProgress: function(fileId, commentId, currentIndex) {
+	uploadMetadata: function() {
+		var data = { 
+			version: 1,
+			pageIndex: this.pageIndex,
+			scale: this.state.scale 
+		};
 		var request = {
-			type: 'uploadProgress',
-			fileId: fileId,
-			commentId: commentId,
-			data: { content: 'CloudReaderProgress:' + currentIndex }
+			type: 'uploadMetadata',
+			fileId: this.fileId,
+			commentId: this.commentId,
+			data: data
 		};
 		chrome.runtime.sendMessage(request);
-		console.log('uploading');
+		console.log('uploading metadata...');
+		console.log(data);
 	}
 });
