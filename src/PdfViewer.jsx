@@ -10,19 +10,14 @@ module.exports = React.createClass({
 	commentId: null,
 	pageIndex: 0,
 	pageOffsets: [],
+	sendMessage: null,
 
 	componentDidMount: function() {
-		if(this.props.syncHandler) {
+		if(this.props.sendMessage) {
+			this.sendMessage = this.props.sendMessage;
 			var that = this;
 			var handler = function() {
-				if(that.props.syncHandler) {
-					that.props.syncHandler(
-						that.fileId, 
-						that.commentId, 
-						that.pageIndex, 
-						that.scrollToPage
-					);
-				}
+				that.syncProgress(that.fileId, that.commentId, that.pageIndex);
 			}
 			setInterval(handler, 20000);
 		}
@@ -107,5 +102,60 @@ module.exports = React.createClass({
 		var scrollTop = $(window).scrollTop();
 		if(this.pageOffsets[this.pageIndex] < scrollTop) this.pageIndex++;
 		console.log(this.pageIndex);
+	},
+
+
+	syncProgress: function(fileId, commentId, currentIndex) {
+		
+		var that = this;
+		var commendId = null;
+		var cloudIndex = null;
+		this.sendMessage(
+			{ type: 'getProgress', fileId: fileId }, 
+			function(response) {
+				if(response != null) {
+					cloudIndex ==response.content.split(':').pop();
+					commentId = response.id;
+					if(cloudIndex > currentIndex) {
+						that.scrollToPage(cloudIndex);
+					}
+				console.log('cloud: ' + cloudIndex + '#current: ' + currentIndex);
+			}
+
+			if(cloudIndex == null || cloudIndex < currentIndex) {
+				var request = {
+					type: 'uploadProgress',
+					fileId: fileId,
+					commentId: commentId,
+					data: { content: 'CloudReaderProgress:' +  currentIndex }
+				};
+			
+				that.sendMessage(request);
+				console.log('uploading');
+			}
+		});
+	},
+
+	getProgress: function(fileId, currentIndex) {
+		chrome.runtime.sendMessage(
+			{ type: 'getProgress', fileId: fileId },
+			function(response) {
+				if(response == null) return;
+				cloudIndex = response.content.split(':').pop();
+				commentId = response.id;
+				console.log('get progress: ' + cloudIndex); 
+			}
+		);
+	},
+
+	uploadProgress: function(fileId, commentId, currentIndex) {
+		var request = {
+			type: 'uploadProgress',
+			fileId: fileId,
+			commentId: commentId,
+			data: { content: 'CloudReaderProgress:' + currentIndex }
+		};
+		chrome.runtime.sendMessage(request);
+		console.log('uploading');
 	}
 });

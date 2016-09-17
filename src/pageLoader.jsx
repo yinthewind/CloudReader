@@ -11,39 +11,35 @@ chrome.runtime.onMessage.addListener(
 			
 			ReactDOM.render(
 				<PdfViewer 
-					url={request.bookUrl} 
+					url={request.bookUrl}
 					fileId={request.fileId}
-					syncHandler={syncProgress}/>,
+					sendMessage={chrome.runtime.sendMessage}
+				/>,
 				document.getElementById('container')
 			);
 		}
 	}
 );
 
-function syncProgress(fileId, commentId, currentIndex, getProgressCallback) {
-		
-	var commendId = null;
-	var cloudIndex = null;
-	chrome.runtime.sendMessage({ type: 'getProgress', fileId: fileId }, function(response) {
-		if(response != null) {
+function getProgress(fileId, currentIndex) {
+	chrome.runtime.sendMessage(
+		{ type: 'getProgress', fileId: fileId },
+		function(response) {
+			if(response == null) return;
 			cloudIndex = response.content.split(':').pop();
 			commentId = response.id;
-			if(cloudIndex > currentIndex) {
-				getProgressCallback(cloudIndex);
-			}
-			console.log('cloudIndex: ' + cloudIndex + '###currentIndex' + currentIndex);
+			console.log('get progress: ' + cloudIndex); 
 		}
+	);
+}
 
-		if(cloudIndex == null || cloudIndex < currentIndex) {
-			var request = {
-				type: 'uploadProgress',
-				fileId: fileId,
-				commentId: commentId,
-				data: { content: 'CloudReaderProgress:' +  currentIndex }
-			};
-			
-			chrome.runtime.sendMessage(request);
-			console.log('uploading');
-		}
-	});
+function uploadProgress(fileId, commentId, currentIndex) {
+	var request = {
+		type: 'uploadProgress',
+		fileId: fileId,
+		commentId: commentId,
+		data: { content: 'CloudReaderProgress:' + currentIndex }
+	};
+	chrome.runtime.sendMessage(request);
+	console.log('uploading');
 }
