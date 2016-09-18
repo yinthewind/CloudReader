@@ -10,16 +10,10 @@ module.exports = React.createClass({
 	commentId: null,
 	pageIndex: 0,
 	pageOffsets: [],
-	synced: false,
+	phase: 0,
 
 	componentDidMount: function() {
 		this.getMetadata();
-
-		var that = this;
-		var handler = function() {
-			if(that.synced) that.uploadMetadata();
-		}
-		setInterval(handler, 10000);
 	},
 
 	getInitialState: function() {
@@ -35,16 +29,17 @@ module.exports = React.createClass({
 		var that = this;
 		doc.then(function(pdfDoc) {
 			var pages = [];
-			for(var i = 1; i < pdfDoc.numPages; i++) {
+			for(var i = 1; i <= pdfDoc.numPages; i++) {
 				pages.push(pdfDoc.getPage(i));
 			}
-			console.log(pages);
-			that.setState({pages: pages});
+			console.log('pages downloaded: ' + pages);
+			that.updatePhase(that.phase | 2);
+			that.setState(Object.assign({}, that.state, { pages: pages }));
 		});
 
 		return { 
 			pages: [],
-			scale: 1.5
+			scale: 1
 		}
 	},
 
@@ -61,9 +56,22 @@ module.exports = React.createClass({
 	render: function() {
 
 		if(this.props.url == null) return null;
+		var pages = null;
+		var that = this;
+		if(this.phase >= 3) {
+			pages = this.state.pages.map(function(page, idx) {
+				return <Page src={page} scale={that.state.scale}
+					onFinish={function(top) {
+						pageOffsets[idx + 1]=top;
+						if(idx+1 === that.state.pages.length) {
+							that.updatePhase(that.phase + 1);
+						}
+					}}
+				/>
+			})
+		}
 
 		var pageOffsets = this.pageOffsets;
-		var that = this;
 
 		return (<div> 
 					<MenuBar items={[
@@ -76,17 +84,7 @@ module.exports = React.createClass({
 							onClick: this.decreaseScale
 						}
 					]}/>
-					{ 
-						this.state.pages.map(function(page, idx) {
-							return <Page 
-										src={page} 
-										scale={that.state.scale}
-										onFinish={function(top) {
-											pageOffsets[idx]=top;
-										}}
-									/>
-						})
-					}
+					{ pages }
 				</div>)
 	},
 
@@ -95,11 +93,16 @@ module.exports = React.createClass({
 		if(pos) {
 			window.scrollTo(0, pos);
 		}
+		this.updatePhase(this.phase | 1);
 	},
 
 	scrollListener: function() { 
 		var scrollTop = $(window).scrollTop();
-		if(this.pageOffsets[this.pageIndex] < scrollTop) this.pageIndex++;
+		if(scrollTop >= this.pageOffsets[this.pageIndex + 1]) {
+			this.pageIndex++;
+		} else if(scrollTop < this.pageOffsets[this.pageIndex]) {
+			this.pageIndex--;
+		}
 		console.log(this.pageIndex);
 	},
 
@@ -108,15 +111,18 @@ module.exports = React.createClass({
 		chrome.runtime.sendMessage(
 			{ type: 'getMetadata', fileId: this.fileId },
 			function(response) {
-				if(response == null) return;
-				if(that.pageIndex < response.pageIndex) {
+				var scale = 1.5;
+				if(response) {
+					that.commentId = response.id;
 					that.pageIndex = response.pageIndex;
-					that.scrollToPage(that.pageIndex);
+					scale = response.scale;
 				}
-				that.commentId = response.id;
+				that.updatePhase(that.phase | 1);
 				console.log('get metadata...'); 
 				console.log(response);
-				that.synced = true;
+				that.setState(
+					Object.assign({}, that.state, {scale: scale})
+				);
 			}
 		);
 	},
@@ -136,5 +142,19 @@ module.exports = React.createClass({
 		chrome.runtime.sendMessage(request);
 		console.log('uploading metadata...');
 		console.log(data);
+	},
+
+	updatePhase: function(newPhase) {
+		console.log('phase: ' + this.phase + '->' + newPhase);
+		this.phase = newPhase;
+		if(newPhase === 4) {
+			this.scrollToPage(this.pageIndex);
+		} else if(newPhase === 5) {
+			var that = this;
+			var handler = function() {
+				that.uploadMetadata();
+			}
+			setInterval(handler, 10000);
+		}
 	}
 });
