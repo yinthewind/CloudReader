@@ -83,7 +83,6 @@ function getMetadata(request) {
 			}
 
 			var data = JSON.parse(response);
-			var result = null;
 			data.comments.forEach(function(value) {
 				if(value.content.startsWith('CloudReaderMetaData')) {
 					var index = value.content.indexOf('{');
@@ -91,11 +90,12 @@ function getMetadata(request) {
 					if(index != -1) {
 						metaData = value.content.substring(index);
 					}
-					result = Object.assign({id: value.id}, JSON.parse(metaData));
-					break;
+					var result = Object.assign({id: value.id}, JSON.parse(metaData));
+					request.sendResponse(result);
+					return;
 				}
 			});
-			request.sendResponse(result);
+			request.sendResponse(null);
 		}
 	);
 }
