@@ -1,3 +1,4 @@
+require('./Menu.css');
 var React = require('react');
 
 module.exports = React.createClass({
@@ -5,6 +6,6 @@ module.exports = React.createClass({
 		var text = this.props.data.text;
 		var onClick = this.props.data.onClick;
 
-		return <div onClick={onClick}>{text}</div>
+		return <div className='menu-item' onClick={onClick}>{text}</div>
 	}
 })

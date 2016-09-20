@@ -19,6 +19,7 @@ module.exports = React.createClass({
 
 		canvas.style.display = 'block';
 		canvas.style.margin = 'auto';
+		canvas.style.marginBottom = '4px';
 		var context = canvas.getContext('2d');
 		canvas.height = viewport.height;
 		canvas.width = viewport.width;
