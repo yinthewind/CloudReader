@@ -11,6 +11,7 @@ module.exports = React.createClass({
 	pageIndex: 0,
 	pageOffsets: [],
 	phase: 0,
+	requestExecutor: null,
 
 	componentDidMount: function() {
 		this.getMetadata();
@@ -24,6 +25,7 @@ module.exports = React.createClass({
 		var url = this.props.url;
 		this.fileId = this.props.fileId;
 		this.pageIndex = this.props.initialPageIndex || 0;
+		this.requestExecutor = this.props.sendMessage;
 		var doc = PDFJS.getDocument(url);
 
 		var that = this;
@@ -106,9 +108,17 @@ module.exports = React.createClass({
 		console.log(this.pageIndex);
 	},
 
+	executeRequest: function(data, callback) {
+		if(this.requestExecutor) {
+			this.requestExecutor(data, callback);
+		} else {
+			console.log('invalid requestExecutor');
+		}
+	},
+
 	getMetadata: function() {
 		var that = this;
-		chrome.runtime.sendMessage(
+		this.executeRequest(
 			{ type: 'getMetadata', fileId: this.fileId },
 			function(response) {
 				var scale = 1.5;
@@ -139,7 +149,7 @@ module.exports = React.createClass({
 			commentId: this.commentId,
 			data: data
 		};
-		chrome.runtime.sendMessage(request);
+		this.executeRequest(request);
 		console.log('uploading metadata...');
 		console.log(data);
 	},
