@@ -3,6 +3,7 @@ var PDFJS = require('pdfjs-dist');
 var React = require('react');
 var MenuBar = require('./MenuBar');
 var Page = require('./Page');
+require('./Viewer.css');
 
 module.exports = React.createClass({
 
@@ -57,7 +58,6 @@ module.exports = React.createClass({
 
 	render: function() {
 
-		if(this.props.url == null) return null;
 		var pages = null;
 		var that = this;
 		if(this.phase >= 3) {
@@ -86,7 +86,9 @@ module.exports = React.createClass({
 							onClick: this.decreaseScale
 						}
 					]}/>
-					{ pages }
+					<div className='pages-container'>
+						{ pages }
+					</div>
 				</div>)
 	},
 

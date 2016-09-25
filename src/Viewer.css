@@ -3,6 +3,10 @@ body {
 	background-color: #333333;
 }
 
+.pages-container {
+	margin-top: 31px;
+}
+
 .pdf-page {
 	margin: 4px;
 }
@@ -13,6 +17,7 @@ body {
 	border-width: 0 0 3px 0;
 	border-color: darkgray;
 	position: fixed;
+	top: 0px;
 	width: 100%;
 	text-align: center;
 }	

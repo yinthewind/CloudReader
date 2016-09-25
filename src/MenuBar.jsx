@@ -1,4 +1,3 @@
-require('./Menu.css');
 var React = require('react');
 var MenuItem = require('./MenuItem');
 
