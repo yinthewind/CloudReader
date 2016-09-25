@@ -66,7 +66,7 @@ module.exports = React.createClass({
 					onFinish={function(top) {
 						pageOffsets[idx + 1]=top;
 						if(idx+1 === that.state.pages.length) {
-							that.updatePhase(that.phase + 1);
+							that.updatePhase(that.phase | 4);
 						}
 					}}
 				/>
@@ -95,7 +95,7 @@ module.exports = React.createClass({
 		if(pos) {
 			window.scrollTo(0, pos);
 		}
-		this.updatePhase(this.phase | 1);
+		this.updatePhase(this.phase | 8);
 	},
 
 	scrollListener: function() { 
@@ -157,9 +157,9 @@ module.exports = React.createClass({
 	updatePhase: function(newPhase) {
 		console.log('phase: ' + this.phase + '->' + newPhase);
 		this.phase = newPhase;
-		if(newPhase === 4) {
+		if(newPhase === 7) {
 			this.scrollToPage(this.pageIndex);
-		} else if(newPhase === 5) {
+		} else if(newPhase === 15) {
 			var that = this;
 			var handler = function() {
 				that.uploadMetadata();
