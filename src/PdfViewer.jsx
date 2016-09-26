@@ -60,20 +60,21 @@ module.exports = React.createClass({
 
 		var pages = null;
 		var that = this;
-		if(this.phase >= 3) {
-			pages = this.state.pages.map(function(page, idx) {
-				return <Page src={page} scale={that.state.scale}
-					onFinish={function(top) {
-						pageOffsets[idx + 1]=top;
-						if(idx+1 === that.state.pages.length) {
-							that.updatePhase(that.phase | 4);
-						}
-					}}
-				/>
-			})
-		}
+		if(this.phase < 3) {
+			return <div className='loader'/>
+		} 
 
 		var pageOffsets = this.pageOffsets;
+		pages = this.state.pages.map(function(page, idx) {
+			return <Page src={page} scale={that.state.scale}
+				onFinish={function(top) {
+					pageOffsets[idx + 1]=top;
+					if(idx+1 === that.state.pages.length) {
+						that.updatePhase(that.phase | 4);
+					}
+				}}
+			/>
+		})
 
 		return (<div> 
 					<MenuBar items={[
