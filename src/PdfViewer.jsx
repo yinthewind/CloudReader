@@ -101,8 +101,15 @@ module.exports = React.createClass({
 		this.updatePhase(this.phase | 8);
 	},
 
+	lastScrollTop: 0,
+
 	scrollListener: function() { 
 		var scrollTop = $(window).scrollTop();
+		if(Math.abs(scrollTop - this.lastScrollTop) < 45) {
+			return;
+		}
+
+		this.lastScrollTop = scrollTop;
 		if(scrollTop >= this.pageOffsets[this.pageIndex + 1]) {
 			this.pageIndex++;
 		} else if(scrollTop < this.pageOffsets[this.pageIndex]) {
