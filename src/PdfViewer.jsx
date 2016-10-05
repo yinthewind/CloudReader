@@ -106,18 +106,25 @@ module.exports = React.createClass({
 
 	scrollListener: function() { 
 		var scrollTop = $(window).scrollTop();
-		if(Math.abs(scrollTop - this.lastScrollTop) < 45) {
+		if(Math.abs(scrollTop - this.lastScrollTop) < 47) {
 			return;
 		}
 
 		this.lastScrollTop = scrollTop;
-		if(scrollTop >= this.pageOffsets[this.pageIndex + 1]) {
-			this.pageIndex++;
-			this.refs[this.pageIndex].renderPageContentAsync();
-		} else if(scrollTop < this.pageOffsets[this.pageIndex]) {
-			this.pageIndex--;
-			this.refs[this.pageIndex].renderPageContentAsync();
+
+		var start = 0, end = this.pageOffsets.length - 1;
+		while(start + 1 < end) {
+			var tmp = start + end;
+			var mid = (tmp - tmp % 2) / 2;
+			if(this.pageOffsets[mid] >= scrollTop) {
+				end = mid;
+			} else if(this.pageOffsets[mid] < scrollTop) {
+				start = mid;
+			}
 		}
+		this.pageIndex = start;
+
+		this.refs[this.pageIndex].renderPageContentAsync();
 		console.log(this.pageIndex);
 	},
 
