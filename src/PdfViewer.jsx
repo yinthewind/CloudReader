@@ -2,7 +2,7 @@ var $ = require('jquery');
 var PDFJS = require('pdfjs-dist');
 var React = require('react');
 var MenuBar = require('./MenuBar');
-var Page = require('./Page');
+var PdfPage = require('./PdfPage');
 require('./Viewer.css');
 
 module.exports = React.createClass({
@@ -66,13 +66,14 @@ module.exports = React.createClass({
 
 		var pageOffsets = this.pageOffsets;
 		pages = this.state.pages.map(function(page, idx) {
-			return <Page src={page} scale={that.state.scale}
+			return <PdfPage data={page} scale={that.state.scale}
 				onFinish={function(top) {
 					pageOffsets[idx + 1]=top;
 					if(idx+1 === that.state.pages.length) {
 						that.updatePhase(that.phase | 4);
 					}
 				}}
+				ref={idx}
 			/>
 		})
 
@@ -112,8 +113,10 @@ module.exports = React.createClass({
 		this.lastScrollTop = scrollTop;
 		if(scrollTop >= this.pageOffsets[this.pageIndex + 1]) {
 			this.pageIndex++;
+			this.refs[this.pageIndex].renderPageContentAsync();
 		} else if(scrollTop < this.pageOffsets[this.pageIndex]) {
 			this.pageIndex--;
+			this.refs[this.pageIndex].renderPageContentAsync();
 		}
 		console.log(this.pageIndex);
 	},
