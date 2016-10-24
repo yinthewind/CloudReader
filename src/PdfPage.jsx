@@ -6,6 +6,7 @@ module.exports = React.createClass({
 	scale: null,
 	canvas: null,
 	pagePromise: null,
+	contentRendered: false,
 
 	componentWillMount: function() {
 		this.pagePromise = this.props.data;
@@ -17,12 +18,16 @@ module.exports = React.createClass({
 		return <canvas ref={function(c) { 
 			that.canvas = c;
 			that.pagePromise.then(function(p) {
-				that.renderPlaceholder(p, that.props.onFinish)}
+				that.renderPlaceholder(p)}
 			);
 		}}/>
 	},
 
-	renderPlaceholder: function(page, onFinish) {
+	getOffsetTop: function() {
+		return this.canvas.offsetTop;
+	},
+
+	renderPlaceholder: function(page) {
 		var canvas = this.canvas;
 		var scale = this.scale;
 
@@ -35,11 +40,15 @@ module.exports = React.createClass({
 		canvas.height = viewport.height;
 		canvas.width = viewport.width;
 
-		var o = $(canvas).offset().top;
-		onFinish(o);
+		if(this.props.onPlaceHolderRendered) {
+			this.props.onPlaceHolderRendered();
+		}
 	},
 
 	renderPageContentAsync: function() {
+		if(this.contentRendered) {
+			return;
+		}
 		var pagePromise = this.pagePromise;
 		var canvas = this.canvas;
 		var renderPageContent = this.renderPageContent;
@@ -59,5 +68,6 @@ module.exports = React.createClass({
 		};
 
 		page.render(renderContext);
+		this.contentRendered = true;
 	}           
 })

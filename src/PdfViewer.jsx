@@ -12,10 +12,26 @@ module.exports = React.createClass({
 	pageIndex: 0,
 	pageOffsets: [],
 	phase: 0,
+	children: [],
 	requestExecutor: null,
+	phases: {
+		metadataDownloaded: 1,
+		pageDataDownloaded: 2,
+		pagePlaceHolderRendered: 4,
+		pageIndexesRecorded: 8,
+		initialScrolled: 16
+	},
 
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.getMetadata();
+	},
+
+	recordPageOffsets: function() {
+		for(i = 0; i < this.state.pages.length; i++) {
+			this.pageOffsets[i] = this.children[i].getOffsetTop();
+			console.log(i + ' ' + this.children[i].getOffsetTop());
+		}
+		this.updatePhase(this.phase |= this.phases.pagePlaceHolderRendered);
 	},
 
 	getInitialState: function() {
@@ -36,7 +52,7 @@ module.exports = React.createClass({
 				pages.push(pdfDoc.getPage(i));
 			}
 			console.log('pages downloaded: ' + pages);
-			that.updatePhase(that.phase | 2);
+			that.updatePhase(that.phase | that.phases.pageDataDownloaded);
 			that.setState(Object.assign({}, that.state, { pages: pages }));
 		});
 
@@ -64,17 +80,23 @@ module.exports = React.createClass({
 			return <div className='loader'/>
 		} 
 
+		var n = this.state.pages.length;
+		var recordPageOffsets = this.recordPageOffsets;
 		var pageOffsets = this.pageOffsets;
+		var children = this.children;
 		pages = this.state.pages.map(function(page, idx) {
-			return <PdfPage data={page} scale={that.state.scale}
-				onFinish={function(top) {
-					pageOffsets[idx + 1]=top;
-					if(idx+1 === that.state.pages.length) {
-						that.updatePhase(that.phase | 4);
-					}
-				}}
-				ref={idx}
-			/>
+			return <PdfPage 
+						data={page} 
+						scale={that.state.scale} 
+						onPlaceHolderRendered={function() {
+							if(--n == 0) {
+								recordPageOffsets();
+							}
+						}}
+						ref={function(page) {
+							children[idx] = page;
+						}}
+					/>
 		})
 
 		return (<div> 
@@ -99,7 +121,7 @@ module.exports = React.createClass({
 		if(pos) {
 			window.scrollTo(0, pos);
 		}
-		this.updatePhase(this.phase | 8);
+		this.updatePhase(this.phase | this.phases.pageIndexesRecorded);
 	},
 
 	lastScrollTop: 0,
@@ -124,7 +146,7 @@ module.exports = React.createClass({
 		}
 		this.pageIndex = start;
 
-		this.refs[this.pageIndex].renderPageContentAsync();
+		this.children[this.pageIndex].renderPageContentAsync();
 		console.log(this.pageIndex);
 	},
 
@@ -147,7 +169,7 @@ module.exports = React.createClass({
 					that.pageIndex = response.pageIndex;
 					scale = response.scale;
 				}
-				that.updatePhase(that.phase | 1);
+				that.updatePhase(that.phase | that.phases.metadataDownloaded);
 				console.log('get metadata...'); 
 				console.log(response);
 				that.setState(
