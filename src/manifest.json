@@ -23,7 +23,9 @@
   "content_scripts": [{
   	"matches": [
 	  "https://docs.google.com/*", 
-	  "https://*.googleusercontent.com/*"
+	  "https://*.googleusercontent.com/*",
+	  "https://drive.google.com/*",
+	  "https://accounts.google.com/*"
 	],
 	"js": ["pageLoader.bundle.js"]
   }],
