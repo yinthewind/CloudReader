@@ -126,13 +126,10 @@ module.exports = React.createClass({
 
 	lastScrollTop: 0,
 
-	scrollListener: function() { 
+	getViewablePages: function() {
+		
 		var scrollTop = $(window).scrollTop();
-		if(Math.abs(scrollTop - this.lastScrollTop) < 47) {
-			return;
-		}
-
-		this.lastScrollTop = scrollTop;
+		var viewablePages = [];
 
 		var start = 0, end = this.pageOffsets.length - 1;
 		while(start + 1 < end) {
@@ -144,9 +141,31 @@ module.exports = React.createClass({
 				start = mid;
 			}
 		}
-		this.pageIndex = start;
 
-		this.children[this.pageIndex].renderPageContentAsync();
+		var scrollBottom = scrollTop + window.innerHeight;
+		for(i=start;i<this.pageOffsets.length&&this.pageOffsets[i]<scrollBottom;i++) {
+			viewablePages.push(i);
+		}
+
+		return viewablePages;
+	},
+
+	scrollListener: function() { 
+		var scrollTop = $(window).scrollTop();
+		if(Math.abs(scrollTop - this.lastScrollTop) < 47) {
+			return;
+		}
+
+		var viewablePages = this.getViewablePages();
+		this.pageIndex = viewablePages[0];
+
+		for(i=0;i<viewablePages.length;i++) {
+			this.children[viewablePages[i]].renderPageContentAsync();
+			console.log('triggering content rendering for page ' + viewablePages[i]);
+		}
+
+		this.lastScrollTop = scrollTop;
+
 		console.log(this.pageIndex);
 	},
 
