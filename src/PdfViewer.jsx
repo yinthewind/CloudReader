@@ -124,8 +124,6 @@ module.exports = React.createClass({
 		this.updatePhase(this.phase | this.phases.pageIndexesRecorded);
 	},
 
-	lastScrollTop: 0,
-
 	getViewablePages: function() {
 		
 		var scrollTop = $(window).scrollTop();
@@ -150,23 +148,27 @@ module.exports = React.createClass({
 		return viewablePages;
 	},
 
+	renderPagesContent: function(pages) {
+		for(i=0;i<pages.length;i++) {
+			this.children[pages[i]].renderPageContentAsync();
+			console.log('triggering content rendering for page ' + pages[i]);
+		}
+	},
+
+	lastScrollTop: 0,
+
 	scrollListener: function() { 
 		var scrollTop = $(window).scrollTop();
 		if(Math.abs(scrollTop - this.lastScrollTop) < 47) {
 			return;
 		}
+		this.lastScrollTop = scrollTop;
 
 		var viewablePages = this.getViewablePages();
 		this.pageIndex = viewablePages[0];
-
-		for(i=0;i<viewablePages.length;i++) {
-			this.children[viewablePages[i]].renderPageContentAsync();
-			console.log('triggering content rendering for page ' + viewablePages[i]);
-		}
-
-		this.lastScrollTop = scrollTop;
-
 		console.log(this.pageIndex);
+
+		this.renderPagesContent(viewablePages);
 	},
 
 	executeRequest: function(data, callback) {
@@ -220,6 +222,8 @@ module.exports = React.createClass({
 		this.phase = newPhase;
 		if(newPhase === 7) {
 			this.scrollToPage(this.pageIndex);
+			var pages = this.getViewablePages();
+			this.renderPagesContent(pages);
 		} else if(newPhase === 15) {
 			var that = this;
 			var handler = function() {
