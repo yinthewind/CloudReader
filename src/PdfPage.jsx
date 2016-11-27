@@ -3,14 +3,12 @@ var $ = require('jquery');
 
 module.exports = React.createClass({
 
-	scale: null,
 	canvas: null,
 	pagePromise: null,
 	contentRendered: false,
 
 	componentWillMount: function() {
 		this.pagePromise = this.props.data;
-		this.scale = this.props.scale || 1.5;
 	},
 
 	render: function() {
@@ -29,7 +27,7 @@ module.exports = React.createClass({
 
 	renderPlaceholder: function(page) {
 		var canvas = this.canvas;
-		var scale = this.scale;
+		var scale = this.props.scale || 1.5;
 
 		canvas.style.display = 'block';
 		canvas.style.margin = 'auto';
@@ -43,6 +41,7 @@ module.exports = React.createClass({
 		if(this.props.onPlaceHolderRendered) {
 			this.props.onPlaceHolderRendered();
 		}
+		this.contentRendered = false;
 	},
 
 	renderPageContentAsync: function() {
@@ -52,22 +51,20 @@ module.exports = React.createClass({
 		var pagePromise = this.pagePromise;
 		var canvas = this.canvas;
 		var renderPageContent = this.renderPageContent;
-		pagePromise.then(function(p) {renderPageContent(p,canvas)});
-	},
+		var scale = this.props.scale || 1.5;
+		pagePromise.then(function(page) {
+			if(!canvas) return null;
 
-	renderPageContent: function(page, canvas) {
-		if(!canvas) return null;
-		var scale = this.scale;
+			var viewport = page.getViewport(scale);
+			var context = canvas.getContext('2d');
 
-		var viewport = page.getViewport(scale);
-		var context = canvas.getContext('2d');
+			var renderContext = {
+				canvasContext: context,
+				viewport: viewport
+			};
 
-		var renderContext = {
-			canvasContext: context,
-			viewport: viewport
-		};
-
-		page.render(renderContext);
-		this.contentRendered = true;
-	}           
+			page.render(renderContext);
+			this.contentRendered = true;
+		});
+	}
 })

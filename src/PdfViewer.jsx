@@ -222,14 +222,15 @@ module.exports = React.createClass({
 		this.phase = newPhase;
 		if(newPhase === 7) {
 			this.scrollToPage(this.pageIndex);
-			var pages = this.getViewablePages();
-			this.renderPagesContent(pages);
 		} else if(newPhase === 15) {
 			var that = this;
 			var handler = function() {
 				that.uploadMetadata();
 			}
 			setInterval(handler, 10000);
+
+			var pages = this.getViewablePages();
+			this.renderPagesContent(pages);
 		}
 	}
 });
