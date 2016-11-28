@@ -5,8 +5,8 @@ module.exports = [
 			popupLoader: './src/popupLoader.jsx'
 		},
 		module: {
-			loaders: [ 
-				{ test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM&harmony'},
+			loaders: [
+				{ test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
 				{ test: /\.css$/, loader: 'style-loader!css-loader'}
 			]
 		},
@@ -18,14 +18,14 @@ module.exports = [
 			extensions: ['', '.js', '.jsx']
 		}
 	},
-{
+	{
 		entry: {
 			testPopup: './dev/testPopup.jsx',
 			testPage: './dev/testPage.jsx'
 		},
 		module: {
 			loaders: [ 
-				{ test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM&harmony'},
+				{ test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
 				{ test: /\.css$/, loader: 'style-loader!css-loader'}
 			]
 		},

@@ -9,15 +9,21 @@
     "pdfjs-dist": "^1.5.262",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-redux": "^4.4.6",
+    "redux": "^3.6.0",
     "style-loader": "^0.13.1"
   },
   "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
     "http-server": "^0.9.0",
-    "webpack-dev-server": "^1.14.1",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-  	"webpack": "./node_modules/.bin/webpack",
+    "webpack": "./node_modules/.bin/webpack",
     "test": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8081",
     "dev": "webpack-dev-server --progress --colors --port 8091"
