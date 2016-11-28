@@ -27,7 +27,7 @@ module.exports = React.createClass({
 	},
 
 	recordPageOffsets: function() {
-		for(i = 0; i < this.state.pages.length; i++) {
+		for(var i = 0; i < this.state.pages.length; i++) {
 			this.pageOffsets[i] = this.children[i].getOffsetTop();
 			console.log(i + ' ' + this.children[i].getOffsetTop());
 		}
@@ -141,7 +141,7 @@ module.exports = React.createClass({
 		}
 
 		var scrollBottom = scrollTop + window.innerHeight;
-		for(i=start;i<this.pageOffsets.length&&this.pageOffsets[i]<scrollBottom;i++) {
+		for(var i=start;i<this.pageOffsets.length&&this.pageOffsets[i]<scrollBottom;i++) {
 			viewablePages.push(i);
 		}
 
@@ -149,8 +149,8 @@ module.exports = React.createClass({
 	},
 
 	renderPagesContent: function(pages) {
-		for(i=0;i<pages.length;i++) {
-			this.children[pages[i]].renderPageContentAsync();
+		for(var i=0;i<pages.length;i++) {
+			this.children[pages[i]].renderPageContent();
 			console.log('triggering content rendering for page ' + pages[i]);
 		}
 	},

@@ -44,7 +44,7 @@ module.exports = React.createClass({
 		this.contentRendered = false;
 	},
 
-	renderPageContentAsync: function() {
+	renderPageContent: function() {
 		if(this.contentRendered) {
 			return;
 		}
@@ -52,6 +52,7 @@ module.exports = React.createClass({
 		var canvas = this.canvas;
 		var renderPageContent = this.renderPageContent;
 		var scale = this.props.scale || 1.5;
+		var contentRendered = this.contentRendered;
 		pagePromise.then(function(page) {
 			if(!canvas) return null;
 
@@ -64,7 +65,7 @@ module.exports = React.createClass({
 			};
 
 			page.render(renderContext);
-			this.contentRendered = true;
+			contentRendered = true;
 		});
 	}
 })
