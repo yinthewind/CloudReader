@@ -10,7 +10,6 @@ module.exports = React.createClass({
 	fileId: null,
 	commentId: null,
 	pageIndex: 0,
-	pageOffsets: [],
 	phase: 0,
 	children: [],
 	requestExecutor: null,
@@ -24,14 +23,6 @@ module.exports = React.createClass({
 
 	componentWillMount: function() {
 		this.getMetadata();
-	},
-
-	recordPageOffsets: function() {
-		for(var i = 0; i < this.state.pages.length; i++) {
-			this.pageOffsets[i] = this.children[i].getOffsetTop();
-			console.log(i + ' ' + this.children[i].getOffsetTop());
-		}
-		this.updatePhase(this.phase |= this.phases.pagePlaceHolderRendered);
 	},
 
 	getInitialState: function() {
@@ -81,16 +72,15 @@ module.exports = React.createClass({
 		} 
 
 		var n = this.state.pages.length;
-		var recordPageOffsets = this.recordPageOffsets;
-		var pageOffsets = this.pageOffsets;
 		var children = this.children;
+		var that = this;
 		pages = this.state.pages.map(function(page, idx) {
 			return <PdfPage 
 						data={page} 
 						scale={that.state.scale} 
 						onPlaceHolderRendered={function() {
 							if(--n == 0) {
-								recordPageOffsets();
+								that.updatePhase(that.phase |= that.phases.pagePlaceHolderRendered);
 							}
 						}}
 						ref={function(page) {
@@ -117,7 +107,7 @@ module.exports = React.createClass({
 	},
 
 	scrollToPage: function(pageIndex) {
-		var pos = this.pageOffsets[pageIndex];
+		var pos = this.children[pageIndex].getOffsetTop();
 		if(pos) {
 			window.scrollTo(0, pos);
 		}
@@ -129,19 +119,19 @@ module.exports = React.createClass({
 		var scrollTop = $(window).scrollTop();
 		var viewablePages = [];
 
-		var start = 0, end = this.pageOffsets.length - 1;
+		var start = 0, end = this.children.length - 1;
 		while(start + 1 < end) {
 			var tmp = start + end;
 			var mid = (tmp - tmp % 2) / 2;
-			if(this.pageOffsets[mid] >= scrollTop) {
+			if(this.children[mid].getOffsetTop() >= scrollTop) {
 				end = mid;
-			} else if(this.pageOffsets[mid] < scrollTop) {
+			} else if(this.children[mid].getOffsetTop() < scrollTop) {
 				start = mid;
 			}
 		}
 
 		var scrollBottom = scrollTop + window.innerHeight;
-		for(var i=start;i<this.pageOffsets.length&&this.pageOffsets[i]<scrollBottom;i++) {
+		for(var i=start;i<this.children.length&&this.children[i].getOffsetTop()<scrollBottom;i++) {
 			viewablePages.push(i);
 		}
 
