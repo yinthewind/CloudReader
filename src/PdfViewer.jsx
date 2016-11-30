@@ -10,6 +10,7 @@ module.exports = React.createClass({
 	fileId: null,
 	commentId: null,
 	pageIndex: 0,
+
 	phase: 0,
 	children: [],
 	requestExecutor: null,
@@ -30,21 +31,21 @@ module.exports = React.createClass({
 		window.addEventListener('scroll', this.scrollListener);
 
 		PDFJS.disableWorker = true;   
-		var url = this.props.url;
 		this.fileId = this.props.fileId;
 		this.pageIndex = this.props.initialPageIndex || 0;
 		this.requestExecutor = this.props.sendMessage;
-		var doc = PDFJS.getDocument(url);
+		var doc = PDFJS.getDocument(this.props.url);
 
 		var that = this;
 		doc.then(function(pdfDoc) {
-			var pages = [];
+			var promises = [];
 			for(var i = 1; i <= pdfDoc.numPages; i++) {
-				pages.push(pdfDoc.getPage(i));
+				promises[i-1]=pdfDoc.getPage(i);
 			}
-			console.log('pages downloaded: ' + pages);
-			that.updatePhase(that.phase | that.phases.pageDataDownloaded);
-			that.setState(Object.assign({}, that.state, { pages: pages }));
+			Promise.all(promises).then((values)=>{
+				that.updatePhase(that.phase | that.phases.pageDataDownloaded);
+				that.setState(Object.assign({}, that.state, { pages: values }));
+			});
 		});
 
 		return { 
@@ -76,7 +77,7 @@ module.exports = React.createClass({
 		var that = this;
 		pages = this.state.pages.map(function(page, idx) {
 			return <PdfPage 
-						data={page} 
+						page={page} 
 						scale={that.state.scale} 
 						onPlaceHolderRendered={function() {
 							if(--n == 0) {

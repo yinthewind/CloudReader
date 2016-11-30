@@ -4,68 +4,45 @@ var $ = require('jquery');
 module.exports = React.createClass({
 
 	canvas: null,
-	pagePromise: null,
 	contentRendered: false,
-
-	componentWillMount: function() {
-		this.pagePromise = this.props.data;
-	},
 
 	render: function() {
 		var that = this;
-		return <canvas ref={function(c) { 
-			that.canvas = c;
-			that.pagePromise.then(function(p) {
-				that.renderPlaceholder(p)}
-			);
-		}}/>
+		var viewport = this.props.page.getViewport(this.props.scale);
+		return <canvas 
+					className='pdf-page' 
+					height={viewport.height}
+					width={viewport.width}
+					ref={function(c) { 
+						that.canvas = c; 
+						if(that.props.onPlaceHolderRendered) {
+							that.props.onPlaceHolderRendered();
+						}
+					}}
+				/>
 	},
 
 	getOffsetTop: function() {
 		return this.canvas.offsetTop;
 	},
 
-	renderPlaceholder: function(page) {
-		var canvas = this.canvas;
-		var scale = this.props.scale || 1.5;
-
-		canvas.style.display = 'block';
-		canvas.style.margin = 'auto';
-		canvas.style.marginBottom = '4px';
-		canvas.style.backgroundColor = 'white';
-
-		var viewport = page.getViewport(scale);
-		canvas.height = viewport.height;
-		canvas.width = viewport.width;
-
-		if(this.props.onPlaceHolderRendered) {
-			this.props.onPlaceHolderRendered();
-		}
-		this.contentRendered = false;
-	},
-
 	renderPageContent: function() {
 		if(this.contentRendered) {
 			return;
 		}
-		var pagePromise = this.pagePromise;
-		var canvas = this.canvas;
-		var renderPageContent = this.renderPageContent;
 		var scale = this.props.scale || 1.5;
-		var contentRendered = this.contentRendered;
-		pagePromise.then(function(page) {
-			if(!canvas) return null;
 
-			var viewport = page.getViewport(scale);
-			var context = canvas.getContext('2d');
+		if(!this.canvas) return null;
 
-			var renderContext = {
-				canvasContext: context,
-				viewport: viewport
-			};
+		var viewport = this.props.page.getViewport(scale);
+		var context = this.canvas.getContext('2d');
 
-			page.render(renderContext);
-			contentRendered = true;
-		});
+		var renderContext = {
+			canvasContext: context,
+			viewport: viewport
+		};
+
+		this.props.page.render(renderContext);
+		this.contentRendered = true;
 	}
 })

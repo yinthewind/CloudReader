@@ -53,3 +53,10 @@ body {
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
 }
+
+.pdf-page {
+	display: block;
+	margin: auto;
+	margin-bottom: 4px;
+	background-color: white;
+}
