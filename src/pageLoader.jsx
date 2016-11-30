@@ -2,7 +2,7 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var PdfViewer = require('./PdfViewer');
+var App = require('./App');
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(
 		if(request.type == 'openPdf') {
 			
 			ReactDOM.render(
-				<PdfViewer 
+				<App 
 					url={request.bookUrl}
 					fileId={request.fileId}
 					sendMessage={chrome.runtime.sendMessage}

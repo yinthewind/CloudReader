@@ -1,9 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var PdfViewer = require('./../src/PdfViewer');
+var App = require('./../src/App');
 
 ReactDOM.render(
-	<PdfViewer 
+	<App 
 		url={ 'example.pdf' } 
 		fileId={ 'example file id' } 
 		sendMessage={mockRequestExecutor}
