@@ -3,6 +3,7 @@ var PDFJS = require('pdfjs-dist');
 var React = require('react');
 var MenuBar = require('./MenuBar');
 var PdfPage = require('./PdfPage');
+var PdfViewer = require('./PdfViewer');
 require('./Viewer.css');
 
 module.exports = React.createClass({
@@ -12,14 +13,11 @@ module.exports = React.createClass({
 	pageIndex: 0,
 
 	phase: 0,
-	children: [],
 	requestExecutor: null,
 	phases: {
 		metadataDownloaded: 1,
 		pageDataDownloaded: 2,
-		pagePlaceHolderRendered: 4,
-		pageIndexesRecorded: 8,
-		initialScrolled: 16
+		pagePlaceHolderRendered: 4
 	},
 
 	componentWillMount: function() {
@@ -66,30 +64,11 @@ module.exports = React.createClass({
 
 	render: function() {
 
-		var pages = null;
-		var that = this;
 		if(this.phase < 3) {
 			return <div className='loader'/>
 		} 
 
-		var n = this.state.pages.length;
-		var children = this.children;
 		var that = this;
-		pages = this.state.pages.map(function(page, idx) {
-			return <PdfPage 
-						page={page} 
-						scale={that.state.scale} 
-						onPlaceHolderRendered={function() {
-							if(--n == 0) {
-								that.updatePhase(that.phase |= that.phases.pagePlaceHolderRendered);
-							}
-						}}
-						ref={function(page) {
-							children[idx] = page;
-						}}
-					/>
-		})
-
 		return (<div> 
 					<MenuBar items={[
 						{ 
@@ -101,65 +80,19 @@ module.exports = React.createClass({
 							onClick: this.decreaseScale
 						}
 					]}/>
-					<div className='pages-container'>
-						{ pages }
-					</div>
+					<PdfViewer 
+						pages={this.state.pages} 
+						scale={this.state.scale}
+						pageIndex={this.pageIndex}
+						updatePageIndex={function(index) {
+							that.pageIndex=index;
+						}}
+						onInitialRenderFinished={ function() {
+							that.updatePhase(that.phase | that.phases.pagePlaceHolderRendered);
+							}
+						}
+					/>
 				</div>)
-	},
-
-	scrollToPage: function(pageIndex) {
-		var pos = this.children[pageIndex].getOffsetTop();
-		if(pos) {
-			window.scrollTo(0, pos);
-		}
-		this.updatePhase(this.phase | this.phases.pageIndexesRecorded);
-	},
-
-	getViewablePages: function() {
-		
-		var scrollTop = $(window).scrollTop();
-		var viewablePages = [];
-
-		var start = 0, end = this.children.length - 1;
-		while(start + 1 < end) {
-			var tmp = start + end;
-			var mid = (tmp - tmp % 2) / 2;
-			if(this.children[mid].getOffsetTop() >= scrollTop) {
-				end = mid;
-			} else if(this.children[mid].getOffsetTop() < scrollTop) {
-				start = mid;
-			}
-		}
-
-		var scrollBottom = scrollTop + window.innerHeight;
-		for(var i=start;i<this.children.length&&this.children[i].getOffsetTop()<scrollBottom;i++) {
-			viewablePages.push(i);
-		}
-
-		return viewablePages;
-	},
-
-	renderPagesContent: function(pages) {
-		for(var i=0;i<pages.length;i++) {
-			this.children[pages[i]].renderPageContent();
-			console.log('triggering content rendering for page ' + pages[i]);
-		}
-	},
-
-	lastScrollTop: 0,
-
-	scrollListener: function() { 
-		var scrollTop = $(window).scrollTop();
-		if(Math.abs(scrollTop - this.lastScrollTop) < 47) {
-			return;
-		}
-		this.lastScrollTop = scrollTop;
-
-		var viewablePages = this.getViewablePages();
-		this.pageIndex = viewablePages[0];
-		console.log(this.pageIndex);
-
-		this.renderPagesContent(viewablePages);
 	},
 
 	executeRequest: function(data, callback) {
@@ -212,16 +145,11 @@ module.exports = React.createClass({
 		console.log('phase: ' + this.phase + '->' + newPhase);
 		this.phase = newPhase;
 		if(newPhase === 7) {
-			this.scrollToPage(this.pageIndex);
-		} else if(newPhase === 15) {
 			var that = this;
 			var handler = function() {
 				that.uploadMetadata();
 			}
 			setInterval(handler, 10000);
-
-			var pages = this.getViewablePages();
-			this.renderPagesContent(pages);
 		}
 	}
 });
