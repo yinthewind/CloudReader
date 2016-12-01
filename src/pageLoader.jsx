@@ -3,6 +3,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var App = require('./App');
+import RequestExecutor from './RequestExecutor';
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -11,9 +12,12 @@ chrome.runtime.onMessage.addListener(
 			
 			ReactDOM.render(
 				<App 
-					url={request.bookUrl}
-					fileId={request.fileId}
-					sendMessage={chrome.runtime.sendMessage}
+					requestExecutor={
+						new RequestExecutor(
+							request.bookUrl,
+							request.fileId,
+							chrome.runtime.sendMessage)
+					}
 				/>,
 				document.getElementById('container')
 			);

@@ -1,12 +1,13 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var App = require('./../src/App');
+import RequestExecutor from './../src/RequestExecutor';
 
 ReactDOM.render(
 	<App 
-		url={ 'example.pdf' } 
-		fileId={ 'example file id' } 
-		sendMessage={mockRequestExecutor}
+		requestExecutor={
+			new RequestExecutor("example.pdf", "fileId", mockRequestExecutor)
+		}
 	/>,
 	document.getElementById('container')
 );
@@ -17,7 +18,7 @@ function mockRequestExecutor(data, callback) {
 		case 'getMetadata': 
 			response = {
 				id: 'example comment id',
-				pageIndex: 0,
+				pageIndex: 4,
 				scale: 1.5,
 				version: 0
 			};
