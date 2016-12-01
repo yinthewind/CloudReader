@@ -4,7 +4,7 @@ var $ = require('jquery');
 module.exports = React.createClass({
 
 	canvas: null,
-	contentRendered: false,
+	contentRendered: null,
 
 	render: function() {
 		var that = this;
@@ -15,9 +15,10 @@ module.exports = React.createClass({
 					width={viewport.width}
 					ref={function(c) { 
 						that.canvas = c; 
-						if(that.props.onPlaceHolderRendered) {
+						if(c&&that.props.onPlaceHolderRendered) {
 							that.props.onPlaceHolderRendered();
 						}
+						that.contentRendered = false;
 					}}
 				/>
 	},
