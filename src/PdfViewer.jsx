@@ -64,7 +64,7 @@ module.exports = React.createClass({
 		var scrollTop = $(window).scrollTop();
 		var viewablePages = [];
 
-		var start = 0, end = this.children.length - 1;
+		var start = 0, end = this.children.length;
 		while(start + 1 < end) {
 			var tmp = start + end;
 			var mid = (tmp - tmp % 2) / 2;
