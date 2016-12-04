@@ -15,9 +15,6 @@ module.exports = React.createClass({
 					width={viewport.width}
 					ref={function(c) { 
 						that.canvas = c; 
-						if(c&&that.props.onPlaceHolderRendered) {
-							that.props.onPlaceHolderRendered();
-						}
 						that.contentRendered = false;
 					}}
 				/>

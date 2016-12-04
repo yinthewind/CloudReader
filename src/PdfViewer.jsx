@@ -25,22 +25,19 @@ module.exports = React.createClass({
 	render: function() {
 
 		var n = this.props.pages.length;
-		var children = this.children;
 		var that = this;
 		var pages = this.props.pages.map(function(page, idx) {
 			return <PdfPage 
 						page={page} 
 						scale={that.props.scale} 
-						onPlaceHolderRendered={function() {
+						ref={function(page) {
+							that.children[idx] = page;
 							if(--n == 0) {
 								if(that.props.onInitialRenderFinished) {
 									that.scrollToPage(that.props.pageIndex);
 									that.props.onInitialRenderFinished();
 								}
 							}
-						}}
-						ref={function(page) {
-							children[idx] = page;
 						}}
 					/>
 		})

@@ -6,7 +6,7 @@ import RequestExecutor from './../src/RequestExecutor';
 ReactDOM.render(
 	<App 
 		requestExecutor={
-			new RequestExecutor("example.pdf", "fileId", mockRequestExecutor)
+			new RequestExecutor("single-page.pdf", "fileId", mockRequestExecutor)
 		}
 	/>,
 	document.getElementById('container')
@@ -18,7 +18,7 @@ function mockRequestExecutor(data, callback) {
 		case 'getMetadata': 
 			response = {
 				id: 'example comment id',
-				pageIndex: 4,
+				pageIndex: 0,
 				scale: 1.5,
 				version: 0
 			};
