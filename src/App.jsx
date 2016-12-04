@@ -8,8 +8,6 @@ require('./Viewer.css');
 
 module.exports = React.createClass({
 
-	metadata: null,
-
 	phase: 0,
 	requestExecutor: null,
 	phases: {
@@ -25,7 +23,10 @@ module.exports = React.createClass({
 			that.metadata=metadata;
 			that.updatePhase(that.phase | that.phases.metadataDownloaded);
 			that.setState(
-				Object.assign({}, that.state, {scale: metadata.scale})
+				Object.assign({}, that.state, {
+					scale: metadata.scale,
+					pageIndex: metadata.pageIndex
+				})
 			);
 		});
 	},
@@ -41,6 +42,7 @@ module.exports = React.createClass({
 
 		return { 
 			pages: [],
+			pageIndex: 0,
 			scale: 1
 		}
 	},
@@ -56,24 +58,33 @@ module.exports = React.createClass({
 					<MenuBar 
 						increaseHandler={function() {
 							var newScale = that.state.scale + 0.25;
-							that.setState(Object.assign({}, that.state, {scale: newScale}));
+							that.setState(
+								Object.assign({}, that.state, {scale: newScale})
+							);
 						}}
 						decreaseHandler={function() {
 							var newScale = that.state.scale - 0.25;
-							that.setState(Object.assign({}, that.state, {scale: newScale}));
+							that.setState(
+								Object.assign({}, that.state, {scale: newScale})
+							);
 						}}
+						pageNum={this.state.pages.length}
+						currentPageIndex={this.state.pageIndex + 1}
 					/>
 					<PdfViewer 
 						pages={this.state.pages} 
 						scale={this.state.scale}
-						pageIndex={this.metadata.pageIndex}
+						pageIndex={this.state.pageIndex}
 						updatePageIndex={function(index) {
-							that.metadata.pageIndex=index;
+							that.setState(
+								Object.assign({}, that.state, {pageIndex:index})
+							);
 						}}
 						onInitialRenderFinished={ function() {
-							that.updatePhase(that.phase | that.phases.pagePlaceHolderRendered);
-							}
-						}
+							that.updatePhase(
+								that.phase | that.phases.pagePlaceHolderRendered
+							);
+						}}
 					/>
 				</div>)
 	},
@@ -84,7 +95,10 @@ module.exports = React.createClass({
 		if(newPhase === 7) {
 			var that = this;
 			var handler = function() {
-				that.props.requestExecutor.uploadMetadata(that.metadata);
+				that.props.requestExecutor.uploadMetadata({
+					pageIndex: that.state.pageIndex,
+					scale: that.state.scale
+				});
 			}
 			setInterval(handler, 10000);
 		}

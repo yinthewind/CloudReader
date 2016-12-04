@@ -15,6 +15,13 @@ module.exports = React.createClass({
 		window.addEventListener('scroll', this.scrollListener);
 	},
 
+	shouldComponentUpdate: function(nextProps, nextState) {
+		if(nextProps.scale===this.props.scale && nextProps.pages===this.props.pages) {
+			return false;
+		}
+		return true;
+	},
+
 	render: function() {
 
 		var n = this.props.pages.length;
