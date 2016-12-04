@@ -2,9 +2,13 @@ var React = require('react');
 
 module.exports = React.createClass({
 	render: function() {
-		var text = this.props.data.text;
-		var onClick = this.props.data.onClick;
+		var icon = this.props.icon;
+		var text = this.props.text;
+		var onClick = this.props.onClick;
 
-		return <div className='menu-item' onClick={onClick}>{text}</div>
+		return <div className='menu-item' onClick={onClick}>
+			{icon}
+			<p>{text}</p>
+		</div>
 	}
 })

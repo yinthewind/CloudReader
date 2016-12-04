@@ -45,16 +45,6 @@ module.exports = React.createClass({
 		}
 	},
 
-	increaseScale: function() {
-		var newScale = this.state.scale + 0.25;
-		this.setState(Object.assign({}, this.state, {scale: newScale}));
-	},
-
-	decreaseScale: function() {
-		var newScale = this.state.scale - 0.25;
-		this.setState(Object.assign({}, this.state, {scale: newScale}));
-	},
-
 	render: function() {
 
 		if(this.phase < 3) {
@@ -63,16 +53,16 @@ module.exports = React.createClass({
 
 		var that = this;
 		return (<div> 
-					<MenuBar items={[
-						{ 
-							text: '+', 
-							onClick: this.increaseScale
-						}, 
-						{ 
-							text: '-', 
-							onClick: this.decreaseScale
-						}
-					]}/>
+					<MenuBar 
+						increaseHandler={function() {
+							var newScale = that.state.scale + 0.25;
+							that.setState(Object.assign({}, that.state, {scale: newScale}));
+						}}
+						decreaseHandler={function() {
+							var newScale = that.state.scale - 0.25;
+							that.setState(Object.assign({}, that.state, {scale: newScale}));
+						}}
+					/>
 					<PdfViewer 
 						pages={this.state.pages} 
 						scale={this.state.scale}
