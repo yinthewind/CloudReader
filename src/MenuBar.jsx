@@ -1,6 +1,6 @@
 var React = require('react');
 var MenuItem = require('./MenuItem');
-import { IoAndroidAddCircle, IoAndroidRemoveCircle } from 'react-icons/lib/io';
+import { IoAndroidAdd, IoAndroidRemove } from 'react-icons/lib/io';
 
 module.exports = React.createClass({
 	
@@ -18,11 +18,11 @@ module.exports = React.createClass({
 			<div className='menu-right'>
 				<MenuItem 
 					onClick={this.props.increaseHandler}
-					icon={<IoAndroidAddCircle className='menu-icon'/>}
+					icon={<IoAndroidAdd className='menu-icon'/>}
 				/>
 				<MenuItem
 					onClick={this.props.decreaseHandler}
-					icon={<IoAndroidRemoveCircle className='menu-icon'/>}
+					icon={<IoAndroidRemove className='menu-icon'/>}
 				/>
 			</div>
 		</div>)
