@@ -5,23 +5,16 @@ var ReactDOM = require('react-dom');
 var App = require('./App');
 import RequestExecutor from './RequestExecutor';
 
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		
-		if(request.type == 'openPdf') {
-			
-			ReactDOM.render(
-				<App 
-					requestExecutor={
-						new RequestExecutor(
-							request.bookUrl,
-							request.fileId,
-							chrome.runtime.sendMessage)
-					}
-				/>,
-				document.getElementById('container')
-			);
+ReactDOM.render(
+	<App 
+		requestExecutor={
+			new RequestExecutor(chrome.runtime.sendMessage)
 		}
-	}
+	/>,
+	document.getElementById('container')
 );
 
+function getParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+	return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}

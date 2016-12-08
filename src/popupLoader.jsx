@@ -10,7 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		data.files.forEach(file => {
 			file.handler = function() {
-				chrome.runtime.sendMessage({type: "openPdf", fileId: file.id});
+				chrome.runtime.sendMessage({
+					type: "openPdf", 
+					fileId: file.id, 
+					webContentLink: file.webContentLink
+				});
 			}
 		});
 

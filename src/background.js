@@ -30,15 +30,10 @@ function processor(request) {
 
 function openPdf(request) {
 	
-	chrome.tabs.create({url: 'page.html'}, function(tab) {
-
-		getFileUrl(request, function(error, status, response) {
-			var data = JSON.parse(response);
-
-			chrome.tabs.sendMessage(tab.id, 
-				{ type: 'openPdf', fileId: data.id, bookUrl: data.webContentLink });
-		});
-	});
+	var fileId = request.fileId;
+	var webContentLink= request.webContentLink;
+	var url = 'page.html?fileId=' + fileId + '&webContentLink=' + webContentLink;
+	chrome.tabs.create({url: url});
 }
 
 function getFileUrl(request, callback) {
@@ -58,7 +53,8 @@ function listFile(request) {
 
 	xhrWithAuth(
 		'GET',
-		baseUrl + "/files?q=mimeType%3D" + fileType,
+		baseUrl + "/files?q=mimeType%3D" + fileType 
+			+ '&fields=files(id%2Cname%2CwebContentLink)',
 		null,
 		true,
 		function(error, status, response) {

@@ -2,9 +2,15 @@ var PDFJS = require('pdfjs-dist');
 
 export default class RequestExecutor {
 
-	constructor(url, fileId, sendMessage) {
-		this.url = url;
-		this.fileId = fileId;
+	constructor(sendMessage) {
+
+		function getParameterByName(name) {
+			var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+			return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+		}
+
+		this.url = getParameterByName('webContentLink');
+		this.fileId = getParameterByName('fileId');;
 		this.sendMessage = sendMessage;
 		this.commentId = null;
 	}
@@ -22,7 +28,6 @@ export default class RequestExecutor {
 		PDFJS.disableWorker = true;   
 		var doc = PDFJS.getDocument(this.url);
 		var that = this;
-
 		return new Promise((resolve,reject)=>{
 			doc.then(function(pdfDoc) {
 				var promises = [];
@@ -39,7 +44,6 @@ export default class RequestExecutor {
 	getMetadata() {
 		var that = this;
 		return new Promise((resolve,reject)=>{
-			
 			this.executeRequest(
 				{ type: 'getMetadata', fileId: this.fileId },
 				function(response) {

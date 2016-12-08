@@ -5,9 +5,7 @@ import RequestExecutor from './../src/RequestExecutor';
 
 ReactDOM.render(
 	<App 
-		requestExecutor={
-			new RequestExecutor("single-page.pdf", "fileId", mockRequestExecutor)
-		}
+		requestExecutor={ new RequestExecutor(mockRequestExecutor) }
 	/>,
 	document.getElementById('container')
 );
