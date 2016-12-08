@@ -21,6 +21,7 @@ module.exports = React.createClass({
 		var that = this;
 		metadataPromise.then((metadata)=>{
 			that.metadata=metadata;
+			console.log(metadata);
 			that.updatePhase(that.phase | that.phases.metadataDownloaded);
 			that.setState(
 				Object.assign({}, that.state, {

@@ -48,15 +48,16 @@ export default class RequestExecutor {
 				{ type: 'getMetadata', fileId: this.fileId },
 				function(response) {
 					var scale = 1.5;
+					var pageIndex = 0;
 					if(response) {
 						that.commentId = response.id;
-						that.pageIndex = response.pageIndex;
+						pageIndex = response.pageIndex;
 						scale = response.scale;
 					}
 					console.log('get metadata...'); 
 					console.log(response);
 					resolve({
-						pageIndex: that.pageIndex,
+						pageIndex: pageIndex,
 						scale: scale
 					});
 				}
