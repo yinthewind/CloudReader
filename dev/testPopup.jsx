@@ -4,9 +4,31 @@ var ReactDOM = require('react-dom');
 
 ReactDOM.render(
 	<Popup files={[ 
-		{name: 'AAA', id: '111', webContentLink: 'hehe'},
-		{name: 'BBB', id: '222', webContentLink: 'keke'},
-		{name: 'CCC', id: '333', webContentLink: 'haha'}
+		{
+			name: 'The HitchHiker\'s Guide to the Galaxy - Douglas Adams',
+			id: '1', 
+			webContentLink: 'hehe'
+		},
+		{
+			name: 'Fall of Giants: The Century Trilogy, Book 1 - Ken Follett', 
+			id: '2', 
+			webContentLink: 'keke'
+		},
+		{
+			name: 'The Fall of Hyperion - Dan Simmons', 
+			id: '3', 
+			webContentLink: 'haha'
+		},
+		{
+			name: 'Ten days that Shook the World - John Reed',
+			id: '4',
+			webContentLink: 'hihi'
+		},
+		{
+			name: 'If on a Winters\s Night a Traveler - Italo Calvino',
+			id: '5',
+			webContentLink: 'hihi'
+		}
 	]}/>,
 	document.getElementById('container')
 );

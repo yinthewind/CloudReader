@@ -1,13 +1,25 @@
+body {
+	margin: 4px;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+	font-size: 100%;
+}
+
 .popup {
-	width: 500px;
+	width: 600px;
 }	
 
 .list-item {
+	padding-left: 8px;
 	background-color: #eee;
 	cursor: pointer;
+	line-height: 150%;
+	border-style: solid;
+	border-width: 1px 0 1px 0;
+	border-color: black;
 }
 
 .list-item:hover {
-	background-color: #00a1e7;
+	background-color: black;
+	color: white;
 }
 	
