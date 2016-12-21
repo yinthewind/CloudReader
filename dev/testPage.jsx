@@ -3,6 +3,9 @@ var ReactDOM = require('react-dom');
 var App = require('./../src/App');
 import RequestExecutor from './../src/RequestExecutor';
 
+if(!window.location.search) {
+	window.location.search = 'webContentLink=single-page.pdf&fileId=sample';
+}
 ReactDOM.render(
 	<App 
 		requestExecutor={ new RequestExecutor(mockRequestExecutor) }
