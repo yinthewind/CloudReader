@@ -97,12 +97,12 @@ module.exports = React.createClass({
 		this.lastScrollTop = scrollTop;
 
 		var viewablePages = this.getViewablePages();
-		this.pageIndex = viewablePages[0];
-		if(this.props.updatePageIndex) {
-			this.props.updatePageIndex(this.pageIndex);
+		if(this.pageIndex != viewablePages[0]) {
+			this.pageIndex = viewablePages[0];
+			if(this.props.updatePageIndex) {
+				this.props.updatePageIndex(this.pageIndex);
+			}
+			this.renderPagesContent(viewablePages);
 		}
-		console.log(this.pageIndex);
-
-		this.renderPagesContent(viewablePages);
 	},
 });

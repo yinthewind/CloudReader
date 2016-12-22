@@ -10,6 +10,7 @@ module.exports = React.createClass({
 
 	phase: 0,
 	requestExecutor: null,
+	needUploadMetadata: false,
 	phases: {
 		metadataDownloaded: 1,
 		pageDataDownloaded: 2,
@@ -30,6 +31,19 @@ module.exports = React.createClass({
 				})
 			);
 		});
+		
+		var handler = function() {
+			if(!that.needUploadMetadata) {
+				return;
+			}
+			that.needUploadMetadata = false;
+
+			that.props.requestExecutor.uploadMetadata({
+				pageIndex: that.state.pageIndex,
+				scale: that.state.scale
+			});
+		}
+		setInterval(handler, 3000);
 	},
 
 	getInitialState: function() {
@@ -80,6 +94,7 @@ module.exports = React.createClass({
 							that.setState(
 								Object.assign({}, that.state, {pageIndex:index})
 							);
+							that.needUploadMetadata = true;
 						}}
 						onInitialRenderFinished={ function() {
 							that.updatePhase(
@@ -93,15 +108,5 @@ module.exports = React.createClass({
 	updatePhase: function(newPhase) {
 		console.log('phase: ' + this.phase + '->' + newPhase);
 		this.phase = newPhase;
-		if(newPhase === 7) {
-			var that = this;
-			var handler = function() {
-				that.props.requestExecutor.uploadMetadata({
-					pageIndex: that.state.pageIndex,
-					scale: that.state.scale
-				});
-			}
-			setInterval(handler, 10000);
-		}
 	}
 });
