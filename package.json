@@ -3,23 +3,23 @@
   "version": "1.0.0",
   "description": "Read & sync your pdf everywhere",
   "dependencies": {
-    "css-loader": "^0.23.1",
     "jquery": "^3.0.0",
-    "jsx-loader": "^0.13.2",
     "pdfjs-dist": "^1.5.262",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-icons": "^2.2.1",
     "react-redux": "^4.4.6",
-    "redux": "^3.6.0",
-    "style-loader": "^0.13.1"
+    "redux": "^3.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.23.1",
     "http-server": "^0.9.0",
+    "jest": "^18.0.0",
+    "style-loader": "^0.13.1",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1"
   },
