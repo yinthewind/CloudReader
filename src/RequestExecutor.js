@@ -54,8 +54,6 @@ export default class RequestExecutor {
 						pageIndex = response.pageIndex;
 						scale = response.scale;
 					}
-					console.log('get metadata...'); 
-					console.log(response);
 					resolve({
 						pageIndex: pageIndex,
 						scale: scale
@@ -73,7 +71,5 @@ export default class RequestExecutor {
 			data: metadata
 		};
 		this.executeRequest(request);
-		console.log('uploading metadata...');
-		console.log(metadata);
 	}
 }

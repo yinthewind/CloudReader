@@ -36,18 +36,6 @@ function openPdf(request) {
 	chrome.tabs.create({url: url});
 }
 
-function getFileUrl(request, callback) {
-	var fileId = request.fileId;
-
-	xhrWithAuth(
-		'GET',
-		baseUrl + "/files/" + fileId + "?fields=webContentLink%2Cid",
-		null,
-		true,
-		callback
-	);
-}
-
 function listFile(request) {
 	var fileType = request.mimeType || "'application/pdf'";
 
