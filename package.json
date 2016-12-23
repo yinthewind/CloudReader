@@ -2,6 +2,16 @@
   "name": "cloud-reader",
   "version": "1.0.0",
   "description": "Read & sync your pdf everywhere",
+  "jest": {
+  	"transform": {
+		".*": "<rootDir>/node_modules/babel-jest"
+	},
+	"transformIgnorePatterns": [
+		"<rootDir>/node_modules/react",
+		"<rootDir>/node_modules/react-dom",
+		"<rootDir>/node_modules/react-addons-test-utils"
+	]
+  },
   "dependencies": {
     "jquery": "^3.0.0",
     "pdfjs-dist": "^1.5.262",
@@ -13,18 +23,23 @@
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
+    "babel-jest": "^18.0.0",
     "babel-loader": "^6.2.8",
+    "babel-polyfill": "^6.20.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.23.1",
     "http-server": "^0.9.0",
     "jest": "^18.0.0",
+    "jest-cli": "^18.0.0",
+    "react-addons-test-utils": "^15.4.1",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
     "webpack": "./node_modules/.bin/webpack",
+    "jest": "jest",
     "test": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8081",
     "dev": "webpack-dev-server --progress --colors --port 8091"
