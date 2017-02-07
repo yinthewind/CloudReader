@@ -102,7 +102,7 @@ module.exports = React.createClass({
 			if(this.props.updatePageIndex) {
 				this.props.updatePageIndex(this.pageIndex);
 			}
-			this.renderPagesContent(viewablePages);
 		}
+		this.renderPagesContent(viewablePages);
 	},
 });
