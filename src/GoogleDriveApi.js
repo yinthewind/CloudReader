@@ -47,7 +47,7 @@ function XhrWithAuth(method, url, data) {
 
 		function getToken() {
 			chrome.identity.getAuthToken(
-				{ interactive: interactive }, 
+				{ interactive: true }, // what value should I use??? 
 				function(token) {
 					if(chrome.runtime.lastError) {
 						callback(chrome.runtime.lastError);
