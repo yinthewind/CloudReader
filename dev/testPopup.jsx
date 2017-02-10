@@ -20,12 +20,12 @@ ReactDOM.render(
 			webContentLink: 'haha'
 		},
 		{
-			name: 'Ten days that Shook the World - John Reed',
+			name: 'Ten Days that Shook the World - John Reed',
 			id: '4',
 			webContentLink: 'hihi'
 		},
 		{
-			name: 'If on a Winters\s Night a Traveler - Italo Calvino',
+			name: 'If on a Winter\'s Night a Traveler - Italo Calvino',
 			id: '5',
 			webContentLink: 'hihi'
 		}
