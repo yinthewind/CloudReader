@@ -7,25 +7,60 @@ var baseUrl = 'https://www.googleapis.com/drive/v3';
 var constants = {
 	listFileUrl: baseUrl + '/files?q=mimeType%3D\'application%2Fpdf\'&fields=files(id%2Cname%2CwebContentLink)',
 	listFileResult: [{
-		id:"0000-00",
-		name:"example.pdf",
-		webContentLink:"https://drive.google.com/uc?id=Q&export=download"
-	},{
-		id:"0000-01",
-		name:"Tmux Quick Reference & Cheat sheet - 2 column format for less scrolling!.pdf",
-		webContentLink:"https://drive.google.com/uc?id=E&export=download"
+		id:'0000-00',
+		name:'example.pdf',
+		webContentLink:'https://drive.google.com/uc?id=Q&export=download'
+	},
+	{
+		id:'0000-01',
+		name:'Tmux Quick Reference & Cheat sheet - 2 column format for less scrolling!.pdf',
+		webContentLink:'https://drive.google.com/uc?id=E&export=download'
 	}],
 	listFileResponse: JSON.stringify({
 		files:[{
-			id:"0000-00",
-			name:"example.pdf",
-			webContentLink:"https://drive.google.com/uc?id=Q&export=download"
-		}, {
-			id:"0000-01",
-			name:"Tmux Quick Reference & Cheat sheet - 2 column format for less scrolling!.pdf",
-			webContentLink:"https://drive.google.com/uc?id=E&export=download"
+			id:'0000-00',
+			name:'example.pdf',
+			webContentLink:'https://drive.google.com/uc?id=Q&export=download'
+		}, 
+		{
+			id:'0000-01',
+			name:'Tmux Quick Reference & Cheat sheet - 2 column format for less scrolling!.pdf',
+			webContentLink:'https://drive.google.com/uc?id=E&export=download'
 		}]
 	}),
+	fileId0: '0000',
+	commentId0: 'AAAAA0vMokM',
+	getMetaUrl: baseUrl + '/files/0000/comments?fields=comments',
+	getMetaResponse: JSON.stringify({
+		comments: [{
+			id: 'AAAAA0vMokM',
+			content: 'CloudReaderMetaData:{"pageIndex":15,"scale":2.25}',
+		},
+		{
+			id: 'AAAAA0vMokI',
+			content: 'CloudReaderMetaData:{"pageIndex":22,"scale":1.5}',
+		}]
+	}),
+	getMetaResponseNotExist: JSON.stringify({
+		comments: [{
+			id: 'AAAAA0vMokM',
+			content: 'My dreams of Lamia are mixed with Lamia\'s dreams',
+		}]
+	}),
+	getMetaResult: {
+		id: 'AAAAA0vMokM', 
+		pageIndex: 15, 
+		scale: 2.25
+	},
+	postMetaUrl: baseUrl + '/files/0000/comments?fields=content', 
+	patchMetaUrl: baseUrl + '/files/0000/comments/AAAAA0vMokM?fields=content',
+	putMetaData: {
+		pageIndex:22,
+		scale:1.5
+	},
+	putMetaDataWrapped: {
+		content: 'CloudReaderMetaData:{"pageIndex":22,"scale":1.5}'
+	}
 }
 
 test('test api name', () => {
@@ -34,8 +69,8 @@ test('test api name', () => {
 
 test('test listFile request url', () => {
 	mockXhr.mockReturnValueOnce(Promise.resolve(constants.listFileResponse));
-	var promise = api.listFile();
-	expect(mockXhr).toHaveBeenCalledWith('GET', constants.listFileUrl, null);
+	api.listFile();
+	expect(mockXhr).toHaveBeenLastCalledWith('GET', constants.listFileUrl, null);
 });
 
 test('test listFile result', () => {
@@ -52,4 +87,36 @@ test('test listFile XHR error', () => {
 	}).catch(data => {
 		expect(data).toBe('unhappy');
 	});
+});
+
+test('test getMeta request url', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.getMetaResponse));
+	api.getMeta(constants.fileId0);
+	expect(mockXhr).toHaveBeenLastCalledWith('GET', constants.getMetaUrl, null);
+});
+
+test('test getMeta result', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.getMetaResponse));
+	return api.getMeta(constants.fileId0).then(data => {
+		expect(data).toEqual(constants.getMetaResult);
+	})
+});
+
+test('test getMeta no meta exist', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.getMetaResponseNotExist));
+	return api.getMeta(constants.fileId0).then(data => {
+		expect(data).toBeNull();
+	});
+});
+
+test('test putMeta post request url', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.putMetaResponse));
+	api.putMeta({ fileId: constants.fileId0 }, constants.putMetaData);
+	expect(mockXhr).toHaveBeenLastCalledWith('POST', constants.postMetaUrl, constants.putMetaDataWrapped);
+});
+
+test('test putMeta patch request url', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.putMetaResponse));
+	api.putMeta({ fileId: constants.fileId0, commentId: constants.commentId0 }, constants.putMetaData);
+	expect(mockXhr).toHaveBeenLastCalledWith('PATCH', constants.patchMetaUrl, constants.putMetaDataWrapped);
 });

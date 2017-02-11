@@ -21,11 +21,51 @@ export default class GoogleDriveApi {
 			'fields=' + encodeURIComponent('files(id,name,webContentLink)'),
 		]);
 
-		var p = this.xhr(method, url, null);
-
-		return p.then(data => {
+		return this.xhr(method, url, null).then(data => {
 			return JSON.parse(data).files;
 		});
+	}
+
+	getMeta(fileId) {
+		var method = 'GET';
+		var url = this.buildUrl('/files/' + fileId + '/comments', [
+			'fields=' + encodeURIComponent('comments')
+		]);
+
+		return this.xhr(method, url, null).then(data => {
+			var comment = JSON.parse(data).comments
+				.find(comment => comment.content.startsWith('CloudReaderMetaData'));
+
+			if(!comment) return null;
+			var index = comment.content.indexOf('{');
+			var data = null;
+			if(index != -1) {
+				data = comment.content.substring(index);
+			}
+			return Object.assign({id: comment.id}, JSON.parse(data));
+		});
+	}
+
+	putMeta(id, data) {
+		var content = { content: 'CloudReaderMetaData:' + JSON.stringify(data) };
+		var fileId = id.fileId;
+		var commentId = id.commentId;
+		var method;
+		var url;
+
+		if(commentId) {
+			method = 'PATCH';
+			url = this.buildUrl('/files/' + fileId + '/comments/' + commentId, [
+				'fields=' + encodeURIComponent('content')
+			]);
+		} else {
+			method = 'POST';
+			url = this.buildUrl('/files/' + fileId + '/comments', [
+				'fields=' + encodeURIComponent('content')
+			]);
+		}
+
+		return this.xhr(method, url, content);
 	}
 }
 
