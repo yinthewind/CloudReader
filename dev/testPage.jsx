@@ -1,34 +1,34 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var App = require('./../src/App');
-import RequestExecutor from './../src/RequestExecutor';
+import StorageAdapter from './../src/StorageAdapter';
+import GoogleDriveApi from './../src/GoogleDriveApi';
 
 if(!window.location.search) {
 	window.location.search = 'webContentLink=single-page.pdf&fileId=sample';
 }
+
 ReactDOM.render(
 	<App 
-		requestExecutor={ new RequestExecutor(mockRequestExecutor) }
+		storageAdapter={new StorageAdapter(new mockDriveApi())}
 	/>,
 	document.getElementById('container')
 );
 
-function mockRequestExecutor(data, callback) {
-	var response = null;
-	switch(data.type) {
-		case 'getMetadata': 
-			response = {
-				id: 'example comment id',
-				pageIndex: 0,
-				scale: 1.5,
-				version: 0
-			};
-		break;
-		case 'uploadMetadata':
-			console.log(data);
-		break;
+function mockDriveApi() {
+	this.listFile = function() { 
+		return Promise.resolve(null); 
 	}
-	if(callback) {
-		callback(response);
+	this.getMeta = function() { 
+		return Promise.resolve({
+			id: 'example comment id',
+			pageIndex: 0,
+			scale: 1.5,
+			version: 0.99
+		}); 
+	}
+	this.putMeta = function(data) { 
+		console.log(data);
+		return null;
 	}
 }

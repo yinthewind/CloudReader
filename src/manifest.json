@@ -17,9 +17,6 @@
 	"https://apis.google.com/*",
 	"https://www.googleapis.com/*"
   ],
-  "background": {
-    "scripts": ["background.js"]
-  },
   "content_scripts": [{
   	"matches": [
 	  "https://docs.google.com/*", 

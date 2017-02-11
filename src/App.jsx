@@ -9,8 +9,7 @@ require('./Viewer.css');
 module.exports = React.createClass({
 
 	phase: 0,
-	requestExecutor: null,
-	needUploadMetadata: false,
+	needUploadMeta: false,
 	phases: {
 		metadataDownloaded: 1,
 		pageDataDownloaded: 2,
@@ -18,8 +17,8 @@ module.exports = React.createClass({
 	},
 
 	componentWillMount: function() {
-		var metadataPromise = this.props.requestExecutor.getMetadata();
 		var that = this;
+		var metadataPromise = this.props.storageAdapter.getMeta();
 		metadataPromise.then((metadata)=>{
 			that.metadata=metadata;
 			console.log(metadata);
@@ -33,12 +32,13 @@ module.exports = React.createClass({
 		});
 		
 		var handler = function() {
-			if(!that.needUploadMetadata) {
+			if(!that.needUploadMeta) {
 				return;
 			}
-			that.needUploadMetadata = false;
+			that.needUploadMeta= false;
 
-			that.props.requestExecutor.uploadMetadata({
+			that.props.storageAdapter.putMeta(
+			{
 				pageIndex: that.state.pageIndex,
 				scale: that.state.scale
 			});
@@ -48,7 +48,7 @@ module.exports = React.createClass({
 
 	getInitialState: function() {
 
-		var pagesPromise = this.props.requestExecutor.getPages();
+		var pagesPromise = this.props.storageAdapter.getPages();
 		var that = this;
 		pagesPromise.then((value)=>{
 			that.updatePhase(that.phase | that.phases.pageDataDownloaded);
@@ -94,7 +94,7 @@ module.exports = React.createClass({
 							that.setState(
 								Object.assign({}, that.state, {pageIndex:index})
 							);
-							that.needUploadMetadata = true;
+							that.needUploadMeta= true;
 						}}
 						onInitialRenderFinished={ function() {
 							that.updatePhase(
