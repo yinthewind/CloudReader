@@ -43,7 +43,7 @@
 	"jesting": "jest --watchAll",
     "test": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8081",
-    "dev": "webpack-dev-server --content-base dev/ --port 8091"
+    "dev": "webpack-dev-server --content-base web/ --port 8091 --hot --inline"
   },
   "repository": {
     "type": "git",

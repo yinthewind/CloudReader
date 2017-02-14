@@ -1,7 +1,9 @@
 module.exports = {
 	entry: {
 		pageLoader: './src/pageLoader.jsx',
-		popupLoader: './src/popupLoader.jsx'
+		popupLoader: './src/popupLoader.jsx',
+		testPage: './dev/testPage.jsx',
+		testPopup: './dev/testPopup.jsx'
 	},
 	module: {
 		loaders: [
@@ -10,7 +12,7 @@ module.exports = {
 		]
 	},
 	output: {
-		path: __dirname + '/src',
+		path: __dirname + '/web',
 		filename: '[name].bundle.js'
 	},
 	resolve: {

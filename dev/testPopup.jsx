@@ -5,7 +5,7 @@ var ReactDOM = require('react-dom');
 ReactDOM.render(
 	<Popup files={[ 
 		{
-			name: 'The HitchHiker\'s Guide to the Galaxy - Douglas Adams',
+			name: 'The Hitchhiker\'s Guide to the Galaxy - Douglas Adams',
 			id: '1', 
 			webContentLink: 'hehe'
 		},
