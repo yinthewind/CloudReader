@@ -33,10 +33,7 @@ module.exports = React.createClass({
 						ref={function(page) {
 							that.children[idx] = page;
 							if(--n == 0) {
-								if(that.props.onInitialRenderFinished) {
-									that.scrollToPage(that.props.pageIndex);
-									that.props.onInitialRenderFinished();
-								}
+								that.scrollToPage(that.props.pageIndex);
 							}
 						}}
 					/>

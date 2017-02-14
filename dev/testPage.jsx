@@ -27,7 +27,7 @@ function mockDriveApi() {
 			version: 0.99
 		}); 
 	}
-	this.putMeta = function(data) { 
+	this.putMeta = function(file, data) { 
 		console.log(data);
 		return null;
 	}

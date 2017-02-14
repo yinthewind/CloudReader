@@ -12,8 +12,7 @@ module.exports = React.createClass({
 	needUploadMeta: false,
 	phases: {
 		metadataDownloaded: 1,
-		pageDataDownloaded: 2,
-		pagePlaceHolderRendered: 4
+		pageDataDownloaded: 2
 	},
 
 	componentWillMount: function() {
@@ -31,7 +30,7 @@ module.exports = React.createClass({
 			);
 		});
 		
-		var handler = function() {
+		var syncMetaHandler = function() {
 			if(!that.needUploadMeta) {
 				return;
 			}
@@ -43,7 +42,7 @@ module.exports = React.createClass({
 				scale: that.state.scale
 			});
 		}
-		setInterval(handler, 3000);
+		setInterval(syncMetaHandler, 3000);
 	},
 
 	getInitialState: function() {
@@ -95,11 +94,6 @@ module.exports = React.createClass({
 								Object.assign({}, that.state, {pageIndex:index})
 							);
 							that.needUploadMeta= true;
-						}}
-						onInitialRenderFinished={ function() {
-							that.updatePhase(
-								that.phase | that.phases.pagePlaceHolderRendered
-							);
 						}}
 					/>
 				</div>)
