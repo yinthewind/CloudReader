@@ -7,8 +7,6 @@ require('./Viewer.css');
 
 module.exports = React.createClass({
 
-	pageIndex: 0,
-
 	children: [],
 
 	componentWillMount: function() {
@@ -84,6 +82,7 @@ module.exports = React.createClass({
 		}
 	},
 
+	pageIndex: 0,
 	lastScrollTop: 0,
 
 	scrollListener: function() { 

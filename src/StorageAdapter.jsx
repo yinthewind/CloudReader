@@ -39,16 +39,12 @@ export default class StorageAdapter{
 		PDFJS.disableWorker = true;   
 		var doc = PDFJS.getDocument(this.url);
 		var that = this;
-		return new Promise((resolve,reject)=>{
-			doc.then(function(pdfDoc) {
-				var promises = [];
-				for(var i = 1; i <= pdfDoc.numPages; i++) {
-					promises[i-1]=pdfDoc.getPage(i);
-				}
-				Promise.all(promises).then((value)=>{
-					resolve(value);
-				});
-			});
+		return doc.then(function(pdfDoc) {
+			var pages = [];
+			for(var i = 1; i < pdfDoc.numPages; i++) {
+				pages[i - 1] = pdfDoc.getPage(i);
+			}
+			return Promise.all(pages);
 		});
 	}
 }
