@@ -13,9 +13,9 @@ module.exports = React.createClass({
 		window.addEventListener('scroll', this.scrollListener);
 	},
 
-	shouldComponentUpdate: function(nextProps, nextState) {
+	shouldComponentUpdate: function(nextProps) {
 		if(nextProps.scale===this.props.scale && nextProps.pages===this.props.pages) {
-			return false;
+			return nextProps.pageIndex !== this.pageIndex;
 		}
 		return true;
 	},
@@ -29,6 +29,7 @@ module.exports = React.createClass({
 						page={page} 
 						scale={that.props.scale} 
 						ref={function(page) {
+							if(!page) return;
 							that.children[idx] = page;
 							if(--n <= 0) {
 								that.scrollToPage(that.props.pageIndex);

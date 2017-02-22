@@ -41,7 +41,7 @@ module.exports = React.createClass({
 		});
 	},
 
-	getRenderParameters: function() {
+	getMeta: function() {
 		var that = this;
 		var metaPromise = this.props.storageAdapter.getMeta();
 		metaPromise.then((meta) => {
@@ -57,8 +57,15 @@ module.exports = React.createClass({
 		
 	getInitialState: function() {
 		this.getPages();
-		this.getRenderParameters();
+		this.getMeta();
 		this.initSyncHandler();
+
+		var that = this;
+		document.addEventListener('visibilitychange', function() {
+			if(document.visibilityState === 'visible') {
+				that.getMeta();
+			}
+		});
 
 		return { 
 			pages: [],
