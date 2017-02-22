@@ -30,7 +30,7 @@ module.exports = React.createClass({
 						scale={that.props.scale} 
 						ref={function(page) {
 							that.children[idx] = page;
-							if(--n == 0) {
+							if(--n <= 0) {
 								that.scrollToPage(that.props.pageIndex);
 							}
 						}}

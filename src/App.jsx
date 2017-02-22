@@ -15,21 +15,8 @@ module.exports = React.createClass({
 		pageDataDownloaded: 2
 	},
 
-	componentWillMount: function() {
+	initSyncHandler: function() {
 		var that = this;
-		var metadataPromise = this.props.storageAdapter.getMeta();
-		metadataPromise.then((metadata)=>{
-			that.metadata=metadata;
-			console.log(metadata);
-			that.updatePhase(that.phase | that.phases.metadataDownloaded);
-			that.setState(
-				Object.assign({}, that.state, {
-					scale: metadata.scale,
-					pageIndex: metadata.pageIndex
-				})
-			);
-		});
-		
 		var syncMetaHandler = function() {
 			if(!that.needUploadMeta) {
 				return;
@@ -45,14 +32,33 @@ module.exports = React.createClass({
 		setInterval(syncMetaHandler, 3000);
 	},
 
-	getInitialState: function() {
-
+	getPages: function() {
 		var pagesPromise = this.props.storageAdapter.getPages();
 		var that = this;
 		pagesPromise.then((value)=>{
 			that.updatePhase(that.phase | that.phases.pageDataDownloaded);
-			that.setState(Object.assign({}, that.state, { pages: value }));
+			that.setState({ pages: value });
 		});
+	},
+
+	getRenderParameters: function() {
+		var that = this;
+		var metaPromise = this.props.storageAdapter.getMeta();
+		metaPromise.then((meta) => {
+			that.metadata = meta;
+			console.log(meta);
+			that.updatePhase(that.phase | that.phases.metadataDownloaded);
+			that.setState({
+				scale: meta.scale,
+				pageIndex: meta.pageIndex
+			});
+		});
+	},
+		
+	getInitialState: function() {
+		this.getPages();
+		this.getRenderParameters();
+		this.initSyncHandler();
 
 		return { 
 			pages: [],
@@ -72,27 +78,21 @@ module.exports = React.createClass({
 					<MenuBar 
 						increaseHandler={function() {
 							var newScale = that.state.scale + 0.25;
-							that.setState(
-								Object.assign({}, that.state, {scale: newScale})
-							);
+							that.setState({scale: newScale});
 						}}
 						decreaseHandler={function() {
 							var newScale = that.state.scale - 0.25;
-							that.setState(
-								Object.assign({}, that.state, {scale: newScale})
-							);
+							that.setState({scale: newScale});
 						}}
 						pageNum={this.state.pages.length}
-						currentPageIndex={this.state.pageIndex + 1}
+						pageIndex={this.state.pageIndex + 1}
 					/>
 					<PdfViewer 
 						pages={this.state.pages} 
 						scale={this.state.scale}
 						pageIndex={this.state.pageIndex}
 						updatePageIndex={function(index) {
-							that.setState(
-								Object.assign({}, that.state, {pageIndex:index})
-							);
+							that.setState({pageIndex:index});
 							that.needUploadMeta= true;
 						}}
 					/>

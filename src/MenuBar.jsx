@@ -9,7 +9,7 @@ module.exports = React.createClass({
 		<div className='menu-bar'>
 			<div className='menu-mid'>
 				<MenuItem 
-					text={this.props.currentPageIndex + "/" + this.props.pageNum} 
+					text={this.props.pageIndex + "/" + this.props.pageNum} 
 				/>
 			</div>
 			<div className='menu-left'>
