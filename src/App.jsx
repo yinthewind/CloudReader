@@ -4,6 +4,7 @@ var React = require('react');
 var MenuBar = require('./MenuBar');
 var PdfPage = require('./PdfPage');
 var PdfViewer = require('./PdfViewer');
+var WarningPanel = require('./WarningPanel');
 require('./Viewer.css');
 
 module.exports = React.createClass({
@@ -38,6 +39,9 @@ module.exports = React.createClass({
 		pagesPromise.then((value)=>{
 			that.updatePhase(that.phase | that.phases.pageDataDownloaded);
 			that.setState({ pages: value });
+		})
+		.catch(error => {
+			that.setState({ warningMessage: error });
 		});
 	},
 
@@ -52,6 +56,9 @@ module.exports = React.createClass({
 				scale: meta.scale,
 				pageIndex: meta.pageIndex
 			});
+		})
+		.catch(error => {
+			that.setState({ warningMessage: error });
 		});
 	},
 		
@@ -76,9 +83,21 @@ module.exports = React.createClass({
 
 	render: function() {
 
+		var content = null;
 		if(this.phase < 3) {
-			return <div className='loader'/>
-		} 
+			content = <div className='loader'/>
+		} else {
+			content =
+					<PdfViewer 
+						pages={this.state.pages} 
+						scale={this.state.scale}
+						pageIndex={this.state.pageIndex}
+						updatePageIndex={function(index) {
+							that.setState({pageIndex:index});
+							that.needUploadMeta= true;
+						}}
+					/>
+		}
 
 		var that = this;
 		return (<div> 
@@ -94,15 +113,8 @@ module.exports = React.createClass({
 						pageNum={this.state.pages.length}
 						pageIndex={this.state.pageIndex + 1}
 					/>
-					<PdfViewer 
-						pages={this.state.pages} 
-						scale={this.state.scale}
-						pageIndex={this.state.pageIndex}
-						updatePageIndex={function(index) {
-							that.setState({pageIndex:index});
-							that.needUploadMeta= true;
-						}}
-					/>
+					<WarningPanel message={this.state.warningMessage}/>
+					{content}
 				</div>)
 	},
 

@@ -35,7 +35,6 @@ export default class StorageAdapter{
 	}
 
 	getPages() {
-
 		PDFJS.disableWorker = true;   
 		var doc = PDFJS.getDocument(this.url);
 		var that = this;
@@ -45,6 +44,8 @@ export default class StorageAdapter{
 				pages[i - 1] = pdfDoc.getPage(i);
 			}
 			return Promise.all(pages);
+		}).catch(failure => {
+			return Promise.reject(failure)
 		});
 	}
 }

@@ -12,5 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			<Popup files={files}/>,
 			document.getElementById('container')
 		);
+	})
+	.catch(error => {
 	});
 });
