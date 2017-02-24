@@ -11,7 +11,7 @@ body {
 	margin: 4px;
 }
 
-.warning-panel {
+.notification-panel {
 	background-color: #ffffff;
 	position: fixed;
 	top: 50px;

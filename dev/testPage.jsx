@@ -5,7 +5,7 @@ import StorageAdapter from './../src/StorageAdapter';
 import GoogleDriveApi from './../src/GoogleDriveApi';
 
 if(!window.location.search) {
-	window.location.search = 'webContentLink=single-page.pdf&fileId=sample';
+	window.location.search = 'webContentLink=driver-full.pdf&fileId=sample';
 }
 
 ReactDOM.render(

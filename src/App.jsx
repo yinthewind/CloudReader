@@ -4,7 +4,7 @@ var React = require('react');
 var MenuBar = require('./MenuBar');
 var PdfPage = require('./PdfPage');
 var PdfViewer = require('./PdfViewer');
-var WarningPanel = require('./WarningPanel');
+var NotificationPanel = require('./NotificationPanel');
 require('./Viewer.css');
 
 module.exports = React.createClass({
@@ -41,7 +41,7 @@ module.exports = React.createClass({
 			that.setState({ pages: value });
 		})
 		.catch(error => {
-			that.setState({ warningMessage: error });
+			that.setState({ notification: error });
 		});
 	},
 
@@ -58,7 +58,7 @@ module.exports = React.createClass({
 			});
 		})
 		.catch(error => {
-			that.setState({ warningMessage: error });
+			that.setState({ notification: error });
 		});
 	},
 		
@@ -113,7 +113,7 @@ module.exports = React.createClass({
 						pageNum={this.state.pages.length}
 						pageIndex={this.state.pageIndex + 1}
 					/>
-					<WarningPanel message={this.state.warningMessage}/>
+					<NotificationPanel message={this.state.notification}/>
 					{content}
 				</div>)
 	},
