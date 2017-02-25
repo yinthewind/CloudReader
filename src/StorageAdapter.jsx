@@ -44,8 +44,6 @@ export default class StorageAdapter{
 				pages[i - 1] = pdfDoc.getPage(i);
 			}
 			return Promise.all(pages);
-		}).catch(failure => {
-			return Promise.reject(failure)
 		});
 	}
 }

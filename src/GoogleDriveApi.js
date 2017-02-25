@@ -79,7 +79,9 @@ function XhrWithAuth(method, url, data) {
 		function callback(error, status, response) {
 			if(error) {
 				console.log(error);
-				reject(error, status, response);
+				console.log(status);
+				console.log(response);
+				reject(error);
 			} else {
 				resolve(response);
 			}
@@ -87,7 +89,7 @@ function XhrWithAuth(method, url, data) {
 
 		function getToken() {
 			chrome.identity.getAuthToken(
-				{ interactive: true }, // what value should I use??? 
+				{ interactive: true },
 				function(token) {
 					if(chrome.runtime.lastError) {
 						callback(chrome.runtime.lastError);

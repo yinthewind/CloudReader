@@ -60,7 +60,11 @@ var constants = {
 	},
 	putMetaDataWrapped: {
 		content: 'CloudReaderMetaData:{"pageIndex":22,"scale":1.5}'
-	}
+	},
+	errorName: 'Somehow request failed',
+	errorCode: 503,
+	errorResponse: 'Service Unavailable',
+	OKCode: 200
 }
 
 test('test api name', () => {
@@ -109,6 +113,13 @@ test('test getMeta no meta exist', () => {
 	});
 });
 
+test('test getMeta request failed', () => {
+	mockXhr.mockReturnValueOnce(Promise.reject(constants.errorName));
+	return api.getMeta(constants.fileId0).catch((data) => {
+		expect(data).toBe(constants.errorName);
+	});
+});
+
 test('test putMeta post request url', () => {
 	mockXhr.mockReturnValueOnce(Promise.resolve(constants.putMetaResponse));
 	api.putMeta({ fileId: constants.fileId0 }, constants.putMetaData);
@@ -119,4 +130,18 @@ test('test putMeta patch request url', () => {
 	mockXhr.mockReturnValueOnce(Promise.resolve(constants.putMetaResponse));
 	api.putMeta({ fileId: constants.fileId0, commentId: constants.commentId0 }, constants.putMetaData);
 	expect(mockXhr).toHaveBeenLastCalledWith('PATCH', constants.patchMetaUrl, constants.putMetaDataWrapped);
+});
+
+test('test putMeta request succeed', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.OKCode));
+	return api.putMeta({ fileId: constants.fildId0 }, constants.putMetaData).then(data => {
+		expect(data).toBe(constants.OKCode);
+	});
+});
+
+test('test putMeta requst failed', () => {
+	mockXhr.mockReturnValueOnce(Promise.reject(constants.errorCode));
+	return api.putMeta({ fileId: constants.fildId0 }, constants.putMetaData).catch(data => {
+		expect(data).toBe(constants.errorCode);
+	});
 });

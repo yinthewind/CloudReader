@@ -20,6 +20,7 @@ function mockDriveApi() {
 		return Promise.resolve(null); 
 	}
 	this.getMeta = function() { 
+		//return Promise.reject('unhappy');
 		return Promise.resolve({
 			id: 'example comment id',
 			pageIndex: 0,
@@ -28,6 +29,7 @@ function mockDriveApi() {
 		}); 
 	}
 	this.putMeta = function(file, data) { 
+		//return Promise.reject('failed to upload reading progress');
 		console.log(data);
 		return null;
 	}

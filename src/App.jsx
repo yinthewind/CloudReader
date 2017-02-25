@@ -22,15 +22,20 @@ module.exports = React.createClass({
 			if(!that.needUploadMeta) {
 				return;
 			}
-			that.needUploadMeta= false;
 
-			that.props.storageAdapter.putMeta(
+			var x = that.props.storageAdapter.putMeta(
 			{
 				pageIndex: that.state.pageIndex,
 				scale: that.state.scale
+			})
+			.then( () => {
+				that.needUploadMeta= false;
+			})
+			.catch(error => {
+				that.setState({ notification: error });
 			});
 		}
-		setInterval(syncMetaHandler, 3000);
+		setInterval(syncMetaHandler, 7000);
 	},
 
 	getPages: function() {

@@ -14,5 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		);
 	})
 	.catch(error => {
+		document.getElementById('container').textContent = error;
 	});
 });
