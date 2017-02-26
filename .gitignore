@@ -2,3 +2,4 @@ node_modules
 publish
 *.bundle.js
 *.swp
+*.swo
