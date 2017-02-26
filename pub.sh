@@ -1,3 +1,5 @@
+rm publish/*
+
 cp web/icon.png publish/
 cp web/popup.html publish/
 cp web/page.html publish/

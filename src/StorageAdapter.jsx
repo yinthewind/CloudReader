@@ -22,6 +22,9 @@ export default class StorageAdapter{
 	getMeta() {
 		var that = this;
 		return this.driveApi.getMeta(this.fileId).then(data => {
+			if(!data) {
+				return { pageIndex: 0, scale: 1.5 };
+			}
 			that.commentId = data.id;
 			return data;
 		});

@@ -46,7 +46,11 @@ module.exports = React.createClass({
 			that.setState({ pages: value });
 		})
 		.catch(error => {
-			that.setState({ notification: error });
+			var msg = error;
+			if(error.status === 403) {
+				msg = 'please sign in to Chrome to gain access to your google drive.'
+			}
+			that.setState({ notification: msg });
 		});
 	},
 
