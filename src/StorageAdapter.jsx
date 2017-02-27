@@ -43,7 +43,7 @@ export default class StorageAdapter{
 		var that = this;
 		return doc.then(function(pdfDoc) {
 			var pages = [];
-			for(var i = 1; i < pdfDoc.numPages; i++) {
+			for(var i = 1; i <= pdfDoc.numPages; i++) {
 				pages[i - 1] = pdfDoc.getPage(i);
 			}
 			return Promise.all(pages);
