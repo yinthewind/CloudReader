@@ -5,8 +5,20 @@ body {
 }
 
 .popup {
-	width: 600px;
-}	
+	width: 800px;
+	text-align: center;
+}
+
+.popup-title {
+	padding-top: 7px;
+	padding-bottom: 7px;
+	background-color: gray;
+	color: white;
+}
+
+.popup-title a{
+	color: white;
+}
 
 .list-item {
 	padding-left: 8px;
