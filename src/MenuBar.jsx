@@ -13,7 +13,7 @@ module.exports = React.createClass({
 				/>
 			</div>
 			<div className='menu-left'>
-				<MenuItem text ='CloudReader'/>
+				<MenuItem text={this.props.title || 'CloudReader'}/>
 			</div>	
 			<div className='menu-right'>
 				<MenuItem 

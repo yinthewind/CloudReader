@@ -70,8 +70,17 @@ module.exports = React.createClass({
 			that.setState({ notification: error });
 		});
 	},
+
+	getTitle: function() {
+		var that = this;
+		this.props.storageAdapter.getTitle().then(title => {
+			console.log(title);
+			that.setState({ title: title });
+		});
+	},
 		
 	getInitialState: function() {
+		this.getTitle();
 		this.getPages();
 		this.getMeta();
 		this.initSyncHandler();
@@ -121,6 +130,7 @@ module.exports = React.createClass({
 						}}
 						pageNum={this.state.pages.length}
 						pageIndex={this.state.pageIndex + 1}
+						title={this.state.title}
 					/>
 					<NotificationPanel message={this.state.notification}/>
 					{content}

@@ -8,6 +8,8 @@ export default class StorageAdapter{
 		this.url = this.getParameterByName('webContentLink');
 		this.fileId = this.getParameterByName('fileId');;
 		this.commentId = null;
+		PDFJS.disableWorker = true;   
+		this.doc = PDFJS.getDocument(this.url);
 	}
 
 	getParameterByName(name) {
@@ -38,15 +40,18 @@ export default class StorageAdapter{
 	}
 
 	getPages() {
-		PDFJS.disableWorker = true;   
-		var doc = PDFJS.getDocument(this.url);
-		var that = this;
-		return doc.then(function(pdfDoc) {
+		return this.doc.then(function(pdfDoc) {
 			var pages = [];
 			for(var i = 1; i <= pdfDoc.numPages; i++) {
 				pages[i - 1] = pdfDoc.getPage(i);
 			}
 			return Promise.all(pages);
 		});
+	}
+
+	getTitle() {
+		return this.doc
+			.then(pdfDoc => pdfDoc.getMetadata())
+			.then(data => data.info.Title );
 	}
 }
