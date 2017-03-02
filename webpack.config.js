@@ -6,7 +6,7 @@ module.exports = {
 		testPopup: './dev/testPopup.jsx'
 	},
 	module: {
-		loaders: [
+		rules: [
 			{ test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader'},
 			{ test: /\.css$/, loader: 'style-loader!css-loader'}
 		]
@@ -16,6 +16,6 @@ module.exports = {
 		filename: '[name].bundle.js'
 	},
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: ['.js', '.jsx']
 	}
 };

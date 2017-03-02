@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "Read & sync your pdf everywhere",
   "jest": {
-  	"transform": {
-		".*": "<rootDir>/node_modules/babel-jest"
-	},
-	"transformIgnorePatterns": [
-		"<rootDir>/node_modules/react",
-		"<rootDir>/node_modules/react-dom",
-		"<rootDir>/node_modules/react-addons-test-utils"
-	]
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/react-dom",
+      "<rootDir>/node_modules/react-addons-test-utils"
+    ]
   },
   "dependencies": {
     "jquery": "^3.0.0",
@@ -34,16 +34,16 @@
     "jest-cli": "^18.0.0",
     "react-addons-test-utils": "^15.4.1",
     "style-loader": "^0.13.1",
-    "webpack": "^1.13.0",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
   },
   "scripts": {
     "webpack": "./node_modules/.bin/webpack",
     "jest": "jest",
-	"jesting": "jest --watchAll",
+    "jesting": "jest --watchAll",
     "test": "npm run serve | npm run dev",
     "serve": "./node_modules/.bin/http-server -p 8081",
-    "dev": "webpack-dev-server --content-base web/ --port 8091 --hot --inline"
+    "dev": "webpack-dev-server --content-base web/ --port 8091 --hot --inline --open"
   },
   "repository": {
     "type": "git",
