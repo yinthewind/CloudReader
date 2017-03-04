@@ -34,16 +34,20 @@
     "jest-cli": "^18.0.0",
     "react-addons-test-utils": "^15.4.1",
     "style-loader": "^0.13.1",
+    "uglify-js": "^2.8.5",
+    "uglifyjs-webpack-plugin": "^0.3.0",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.1"
+    "webpack-dev-server": "^2.4.1",
+    "webpack-merge": "^3.0.0"
   },
   "scripts": {
-    "webpack": "./node_modules/.bin/webpack",
+    "build": "webpack --env=dev --profile --colors",
+    "build:prod": "webpack --env=prod --profile --colors",
     "jest": "jest",
     "jesting": "jest --watchAll",
     "test": "npm run serve | npm run dev",
-    "serve": "./node_modules/.bin/http-server -p 8081",
-    "dev": "webpack-dev-server --content-base web/ --port 8091 --hot --inline --open"
+    "serve": "http-server -p 8081",
+    "dev": "webpack-dev-server --env=dev --content-base web/ --port 8091 --hot --inline --open"
   },
   "repository": {
     "type": "git",
