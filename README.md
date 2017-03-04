@@ -12,4 +12,7 @@ Click [here](https://yinthewind.github.io/javascript/pdf/reader/2017/02/15/Cloud
   * Your version of CloudReader is ready, just [install as chrome extension](https://developer.chrome.com/extensions/getstarted)
   * Or, you can try this `npm run dev`
 
+## Free PDF resources
+  * [O'Reilly Free Books](http://www.oreilly.com/programming/free/)
+
 ## Enjoy Reading and Debugging :P
