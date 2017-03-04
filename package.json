@@ -42,12 +42,12 @@
   },
   "scripts": {
     "build": "webpack --env=dev --profile --colors",
-    "build:prod": "webpack --env=prod --profile --colors",
+    "build:extension": "webpack --env=extension --profile --colors",
     "jest": "jest",
     "jesting": "jest --watchAll",
     "test": "npm run serve | npm run dev",
     "serve": "http-server -p 8081",
-    "dev": "webpack-dev-server --env=dev --content-base web/ --port 8091 --hot --inline --open"
+    "dev": "webpack-dev-server --env=dev --content-base dev/ --port 8091 --hot --inline --open"
   },
   "repository": {
     "type": "git",
