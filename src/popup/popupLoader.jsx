@@ -1,7 +1,7 @@
 var ReactDOM = require('react-dom');
 var React = require('react');
 var Popup = require('./Popup');
-import GoogleDriveApi from '../src/GoogleDriveApi';
+import GoogleDriveApi from '../storage/GoogleDriveApi';
 
 document.addEventListener('DOMContentLoaded', function() {
 	

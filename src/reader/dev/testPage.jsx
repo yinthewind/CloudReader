@@ -1,11 +1,11 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var App = require('./../src/App');
-import StorageAdapter from './../src/StorageAdapter';
-import GoogleDriveApi from './../src/GoogleDriveApi';
+var App = require('../App');
+import StorageAdapter from '../../storage/StorageAdapter';
+import GoogleDriveApi from '../../storage/GoogleDriveApi';
 
 if(!window.location.search) {
-	window.location.search = 'webContentLink=driver-full.pdf&fileId=sample';
+	window.location.search = 'webContentLink=pdfSamples/driver-full.pdf&fileId=sample';
 }
 
 ReactDOM.render(

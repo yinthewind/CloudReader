@@ -6,8 +6,8 @@ const commonConfig = require('./webpack.base.js');
 module.exports = function(env) {
 	return webpackMerge(commonConfig(), {
 		entry: {
-			testPage: path.resolve(__dirname, '../dev/testPage.jsx'),
-			testPopup: path.resolve(__dirname, '../dev/testPopup.jsx')
+			testPage: path.resolve(__dirname, '../src/reader/dev/testPage.jsx'),
+			testPopup: path.resolve(__dirname, '../src/popup/dev/testPopup.jsx')
 		},
 		output: {
 			path: path.resolve(__dirname, '../dev'),

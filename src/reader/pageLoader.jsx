@@ -3,8 +3,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var App = require('./App');
-import GoogleDriveApi from './GoogleDriveApi';
-import StorageAdapter from './StorageAdapter';
+import GoogleDriveApi from '../storage/GoogleDriveApi';
+import StorageAdapter from '../storage/StorageAdapter';
 
 ReactDOM.render(
 	<App 

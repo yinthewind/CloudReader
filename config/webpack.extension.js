@@ -7,8 +7,8 @@ const commonConfig = require('./webpack.base.js');
 module.exports = function(env) {
 	return webpackMerge(commonConfig(), {
 		entry: {
-			pageLoader: path.resolve(__dirname, '../src/pageLoader.jsx'),
-			popupLoader: path.resolve(__dirname, '../src/popupLoader.jsx')
+			pageLoader: path.resolve(__dirname, '../src/reader/pageLoader.jsx'),
+			popupLoader: path.resolve(__dirname, '../src/popup/popupLoader.jsx')
 		},
 		output: {
 			path: path.resolve(__dirname, '../extension'),

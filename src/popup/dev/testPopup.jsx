@@ -1,4 +1,4 @@
-var Popup = require('./../src/Popup');
+var Popup = require('../Popup');
 var React = require('react');
 var ReactDOM = require('react-dom');
 
