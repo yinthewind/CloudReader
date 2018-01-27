@@ -16,7 +16,7 @@ ReactDOM.render(
 );
 
 function mockDriveApi() {
-	this.listFile = function() { 
+	this.listFiles = function() { 
 		return Promise.resolve(null); 
 	}
 	this.getMeta = function() { 

@@ -17,8 +17,8 @@ export default class StorageAdapter{
 		return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 	}
 
-	listFile() {
-		return this.driveApi.listFile();
+	listFiles() {
+		return this.driveApi.listFiles();
 	}
 
 	getMeta() {

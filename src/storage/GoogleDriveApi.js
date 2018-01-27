@@ -14,7 +14,7 @@ export default class GoogleDriveApi {
 		return url;
 	}
 
-	listFile() {
+	listFiles() {
 		var method = 'GET';
 		var url = this.buildUrl('/files', [
 			'q=' + encodeURIComponent('mimeType=\'application/pdf\''),

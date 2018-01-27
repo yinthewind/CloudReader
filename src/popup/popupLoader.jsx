@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	var api = new GoogleDriveApi();
 
-	api.listFile().then(files => {
+	api.listFiles().then(files => {
 		ReactDOM.render(
 			<Popup files={files}/>,
 			document.getElementById('container')

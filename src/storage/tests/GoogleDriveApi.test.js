@@ -5,8 +5,8 @@ var api = new GoogleDriveApi(mockXhr);
 var baseUrl = 'https://www.googleapis.com/drive/v3';
 
 var constants = {
-	listFileUrl: baseUrl + '/files?q=mimeType%3D\'application%2Fpdf\'&fields=files(id%2Cname%2CwebContentLink)',
-	listFileResult: [{
+	listFilesUrl: baseUrl + '/files?q=mimeType%3D\'application%2Fpdf\'&fields=files(id%2Cname%2CwebContentLink)',
+	listFilesResult: [{
 		id:'0000-00',
 		name:'example.pdf',
 		webContentLink:'https://drive.google.com/uc?id=Q&export=download'
@@ -16,7 +16,7 @@ var constants = {
 		name:'Tmux Quick Reference & Cheat sheet - 2 column format for less scrolling!.pdf',
 		webContentLink:'https://drive.google.com/uc?id=E&export=download'
 	}],
-	listFileResponse: JSON.stringify({
+	listFilesResponse: JSON.stringify({
 		files:[{
 			id:'0000-00',
 			name:'example.pdf',
@@ -71,22 +71,22 @@ test('test api name', () => {
 	expect(api.name).toBe('GoogleDriveApi');
 });
 
-test('test listFile request url', () => {
-	mockXhr.mockReturnValueOnce(Promise.resolve(constants.listFileResponse));
-	api.listFile();
-	expect(mockXhr).toHaveBeenLastCalledWith('GET', constants.listFileUrl, null);
+test('test listFiles request url', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.listFilesResponse));
+	api.listFiles();
+	expect(mockXhr).toHaveBeenLastCalledWith('GET', constants.listFilesUrl, null);
 });
 
-test('test listFile result', () => {
-	mockXhr.mockReturnValueOnce(Promise.resolve(constants.listFileResponse));
-	return api.listFile().then(data => {
-		expect(data).toEqual(constants.listFileResult);
+test('test listFiles result', () => {
+	mockXhr.mockReturnValueOnce(Promise.resolve(constants.listFilesResponse));
+	return api.listFiles().then(data => {
+		expect(data).toEqual(constants.listFilesResult);
 	});
 });
 
-test('test listFile XHR error', () => {
+test('test listFiles XHR error', () => {
 	mockXhr.mockReturnValueOnce(Promise.reject('unhappy'));
-	return api.listFile().then(data => {
+	return api.listFiles().then(data => {
 		expect(data).toBeNull();
 	}).catch(data => {
 		expect(data).toBe('unhappy');
