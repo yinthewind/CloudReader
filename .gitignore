@@ -4,3 +4,4 @@ publish
 *.swp
 *.swo
 CloudReaderExtension.zip
+npm-debug.log

@@ -1,4 +1,4 @@
-import GoogleDriveApi from '../src/GoogleDriveApi';
+import GoogleDriveApi from '../GoogleDriveApi';
 
 var mockXhr = jest.fn();
 var api = new GoogleDriveApi(mockXhr);
